@@ -1,2 +1,1 @@
-RewriteEngine On
-RewriteRule ^([a-zA-Z0-9\-\&\%\@\_\/]*)$ index.php?action=$1
+<h3>footer</h3>

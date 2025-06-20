@@ -1,13 +1,18 @@
 <?php
 namespace Workshop\Entity;
 
+use Toolbox\Controller\AbstractController;
 
-class Calendar {
+
+class Calendar extends AbstractController {
+  /*
   public function index() {
     echo '<h4>Calendar Index</h4>';
   }
+  */
+  
   public function something($var) {
-    echo '<h5>Something with '.$var;
+    $this->render('calendar', ['message' => $var]);
   }
   /*
   private ?int $id;

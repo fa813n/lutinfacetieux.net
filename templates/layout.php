@@ -7,6 +7,8 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>Homepage</h1>
+  
+  <?= $content ?>
+  
 </body>
 </html> 

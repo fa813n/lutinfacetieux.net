@@ -1,18 +1,13 @@
 <?php
 
 namespace Toolbox;
-echo "<h2>Autoloader</h2>";
+
 const ALIASES = ["Toolbox" => "lib", "Workshop" => "src"];
 class Autoloader
 {
   static function register()
   {
-    echo "class: " .
-      __CLASS__ .
-      "<br> nam: " .
-      __NAMESPACE__ .
-      " <br>dir: " .
-      __DIR__;
+    // var_dump(__CLASS__);
     spl_autoload_register([__CLASS__, "autoload"]);
   }
 
@@ -31,31 +26,24 @@ class Autoloader
     }
 
     $filepath = dirname(__DIR__) . "/" . implode("/", $namespaceParts) . ".php";
+    // echo $filepath;
+    if (file_exists($filepath)) {
+      require $filepath;
+    }
+    /*
     if (!file_exists($filepath)) {
-      throw new Exception(
+      $_SESSION['error'] = 'classe introuvable';
+      header('location', ROOT);
+      
+      throw new \Exception(
         "Fichier « " .
           $filepath .
           " » introuvable pour la classe « " .
           $class .
           " ». Vérifier le chemin, le nom de la classe ou le namespace"
       );
-    }
-    require $filepath;
+      */
   }
-
-  /*
-    echo '<br>fct autoload <br>class: '.__CLASS__.'<br> nam: '.__NAMESPACE__.' <br>dir: '.__DIR__;
-    echo '<br>$class before = '.$class.'<br>';
-    echo '<br> ns : '.__NAMESPACE__.'<br>';
-    $class = str_replace(__NAMESPACE__.'\\','',$class);
-    echo '<br>$class1 = '.$class.'<br>';
-    $class = str_replace('\\','/', $class);
-    echo '$class = '.$class.'<br>';
-    var_dump($_GET);
-    */
-  /*
-    if (file_exists(__DIR__.'/'.$class.'.php')) {
-      require(__DIR__.'/'.$class.'.php');
-    }
-    */
+  //require $filepath;
+  // }
 }
