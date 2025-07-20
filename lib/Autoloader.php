@@ -2,17 +2,16 @@
 
 namespace Toolbox;
 
-const ALIASES = ["Toolbox" => "lib", "Workshop" => "src"];
-class Autoloader
-{
-  static function register()
-  {
+use \Exception;
+
+const ALIASES = ["Toolbox" => "lib", "Workshop" => "src", "Config" => "config"];
+class Autoloader {
+  static function register() {
     // var_dump(__CLASS__);
     spl_autoload_register([__CLASS__, "autoload"]);
   }
 
-  static function autoload($class)
-  {
+  static function autoload($class) {
     $namespaceParts = explode("\\", $class);
 
     if (in_array($namespaceParts[0], array_keys(ALIASES))) {
@@ -26,7 +25,7 @@ class Autoloader
     }
 
     $filepath = dirname(__DIR__) . "/" . implode("/", $namespaceParts) . ".php";
-    // echo $filepath;
+    
     if (file_exists($filepath)) {
       require $filepath;
     }
@@ -44,6 +43,4 @@ class Autoloader
       );
       */
   }
-  //require $filepath;
-  // }
 }

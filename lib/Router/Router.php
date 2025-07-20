@@ -24,7 +24,7 @@ public function start() {
   $params = explode('/', $_GET['action']);
   if ($params[0] != '') {
     
-    $controller = class_exists('\\Workshop\\Entity\\'.ucfirst($params[0])) ? '\\Workshop\\Entity\\'.ucfirst(array_shift($params)) : 'Workshop\\Entity\\Homepage';
+    $controller = class_exists('\\Workshop\\Controller\\'.ucfirst($params[0]).'Controller') ? '\\Workshop\\Controller\\'.ucfirst(array_shift($params).'Controller') : 'Workshop\\Controller\\HomepageController';
     
     $method = isset($params[0]) ? array_shift($params) : 'index'; 
     $controller = new $controller();

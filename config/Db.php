@@ -1,12 +1,12 @@
 <?php
-namespace Lutin\config;
+namespace Config;
 use PDO;
 use PDOException;
 class Db extends PDO {
   private static $instance;
   
   private const DBHOST = '127.0.0.1';
-  private const DBNAME = 'adventCalendar';
+  private const DBNAME = 'lutinfacetieux';
   private const DBUSER = 'root';
   private const DBPASS = 'admin';
   
