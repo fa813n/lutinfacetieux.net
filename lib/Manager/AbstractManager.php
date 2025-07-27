@@ -43,7 +43,7 @@ abstract class AbstractManager {
   public function getNewId() {
       $this->db = Db::getInstance();
       $newId = $this->db->lastInsertId();
-      $this->setId($newId);
+      //$this->setId($newId);
       return $newId;
     }
   //READ
@@ -69,17 +69,17 @@ abstract class AbstractManager {
     return $this->request("SELECT * FROM $this->table where id = $id")->fetch();
   }    
   //UPDATE
-  public function update() {
+  public function update(array $newValues, $id) {
     $fields = [];
     $values = [];
-    foreach($this as $field => $value) {
+    foreach($newValues as $field => $value) {
     // UPDATE SET field1= ?, field2= ? WHERE id = ?
       if($value !== null && $field != 'db' && $field != 'table') {
         $fields[] = "$field = ?";
         $values[] = $value;
       }
     }
-      $values[] = $this->id;
+      $values[] = $id;
       $fields_list = implode(', ', $fields);
       
       return $this->request('UPDATE '.$this->table.' SET '.$fields_list.' WHERE id = ? ', $values);
@@ -88,17 +88,14 @@ abstract class AbstractManager {
   //DELETE
   public function delete(int $id) {
         return $this->request("DELETE FROM {$this->table} WHERE id = ?", [$id]);
-    }
-    
-    
-  public function hydrate(array $data) {
+  }
+  public function hydrate($obj, array $data) {
     foreach ($data as $key => $value) {
       $setter = 'set'.ucfirst($key);
-      if (method_exists($this, $setter)) {
-        $this->$setter($value);
+      if (method_exists($obj, $setter)) {
+        $obj->$setter($value);
       }
     }
-    return $this;
+    return $obj;
   }
-  
 }

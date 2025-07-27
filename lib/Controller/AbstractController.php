@@ -27,15 +27,12 @@ abstract class AbstractController {
   }
   
   public function index (/*array $data = []*/) {
-    echo('<p style="color:red">');
-    var_dump(get_class($this));
-    var_dump(get_called_class());
-    echo('</p>');
+    $indexContent = $this->indexContent ?? [];
+    print_r($indexContent);
     $classNameParts = explode('\\', get_class($this));
     $page = str_replace('Controller','',(lcfirst(end($classNameParts))));
-    $this->render($page);
+    $this->render($page, $indexContent);
+    //print_r($indexContent);
+    print_r($this->indexContent);
   }
 }
- 
-
-      

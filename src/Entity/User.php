@@ -11,6 +11,8 @@ class User extends AbstractController {
   private ?string $name;
   private ?string $token;
   private ?bool $active;
+  
+  const MESSAGES = ['accountActivated' => 'Votre compte a été activé avec succès, vous pouvez maintenant sauvegrder vos créations'];
 
   public function getId(): ?id {
     return $this->id;

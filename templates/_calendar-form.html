@@ -1,0 +1,18 @@
+<form method="post" action="" <label for="calendarTitle">Nom du calendrier</label>
+  <input type="text" name="calendar[calendarTitle]" id="calendarTitle" placeholder="plus que quelques semeines avant..." value="<?= $calendarTitle ?>">
+  <label for="startDate">Date de début</label>
+  <input type="date" name="calendar[startDate]" id="startDate" value="<?= $startDate ?>">
+  <label for="endDate" >Date de fin</label>
+  <input type="date" name="calendar[endDate]" id="endDate" value="<?= $endDate ?>">
+  <label for="receiver">Destinataire</label>
+  <input type="text" name="calendar[receiver]" id="receiver" value="<?= $receiver ?>">
+  <!--
+    <p>éditer</p>
+    <input type="submit" name="edit" value="éditer" formaction="<?= SITE_ROOT ?>/Calendar/displayCalendar/<?= $id ?>">
+    -->
+    
+    <p>Sauvegarder</p>
+    <input type="submit" name="save" formaction="<?= SITE_ROOT ?>/Calendar/saveCalendar" value="enregistrer">
+  </form>
+  
+  

@@ -1,7 +1,8 @@
 <?php
-namespace Toolbox\Controller;
+namespace Workshop\Controller;
 
 use Workshop\Entity\User;
+use Workshop\Manager\UserManager;
 
 class AccountController {
   
@@ -11,44 +12,44 @@ class AccountController {
     return $token;
   }
   
-  function sendActivationLink(string $token, int $userId, string $sendFunction = 'email'):void {
-    $link = "https://lutinfacetieux.net/account/activate/$userId/$token";
+  static function sendActivationLink(int $userId, string $token, string $sendFunction = 'email'):void {
+    //$token = self::generateToken();
+    $link = ROOT_URL."/account/activate/$userId/$token";
     $message = "Pour acriver votre compte, cliquez sur <a href=\"$link\">le lien suivant.</a> Si lelien direct ne marche pas, copier-coller ceci dans la barre de recherche du navigateur : $link . À très bientôt!";
-    $this->$sendFunction($userId, $message);
+    self::$sendFunction($userId, $message);
   }
-  private function email($userId, $message) {
+  private static function email($userId, $message) {
     
   }
-  private function displayLink($userId, $message) {
-    
+  private static function displayLink($userId, $message) {
+    echo($message);
   }
   /*
   private function sendSms ($userId, $message) {
     
   }
   */
-  
-  function activateAccount() {
-    //check token
-  }
 
   public static function activate(int $id, string $token) {
     $user = new UserManager;
     $selectedUser = $user->findById($id);
     if (!$selectedUser) {
       $_SESSION['error'] = 'Il n\'y a pas de compte à ce nom';
+      header('location: '.ROOT_URL.'/user/register');
     }
     else {
-      if ($selectedUser['activated'] ==1) {
+      if ($selectedUser['active'] == 1) {
         $_SESSION['error'] = 'Le compte est déjà actif';
+        header('location: '.ROOT_URL.'/user/login');
       }
-      else if ($selectedUser['controlKey'] == $controlKey) {
-        $newUser = $user->hydrate($selectedUser);
-        $newUser->setActivated(1)->update();
+      else if ($selectedUser['token'] == $token) {
+        //$newUser = $user->hydrate($selectedUser);
+        $user->update(['active' => 1], $id);
+        header('location: '.ROOT_URL.'/user/successMessage/accountActivated');
       }
       else {
         $_SESSION['error'] = 'la clé de contrôle est absente ou ne correspond pas, cliquer pour (r)envoyer un lien d\'activation';
-        self::render('sendRegisterMail',['user' => $selectedUser['login']]);
+        header('location: '.ROOT_URL.'/user/sendActivationLink/'.$id);
       }
     }
   }

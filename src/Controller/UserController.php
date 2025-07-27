@@ -2,21 +2,27 @@
 namespace Workshop\Controller;
 
 use \Toolbox\Controller\AbstractController;
-use \Toolbox\Controller\AccountController;
+use \Workshop\Controller\AccountController;
 use \Workshop\Manager\UserManager;
 use \Workshop\Entity\User;
 
 class UserController extends AbstractController {
   
-  public function createUser(array $newUser) {
+  public function createUser(array $newUser):int {
     $user = new User;
     $userManager = new userManager;
+    $token = AccountController::generateToken();
     $user->setLogin($newUser['login'])
          ->setName($newUser['name'])
          ->setPassword($newUser['password'])
-         ->setToken(AccountController::generateToken())
+         ->setToken($token)
          ->setActive(0);
+    //AccountController::sendActivationMail($user);
     $userManager->createUser($user);
+    $userId = $userManager->getNewId();
+    AccountController::sendActivationLink($userId, $token, 'displayLink');
+    return $userId;
+    //header('location: '.ROOT_URL.'/account/activate/'.$userId);
   }
   
   private function setUserSession(array $connectedUser) {
@@ -45,11 +51,39 @@ class UserController extends AbstractController {
         $this->render('user', ['formSubmit' => 'login']);
       }
       else {
-        $this->createUser($newUser);
+        $newUserId = $this->createUser($newUser);
+        $this->render('user', ['userForm' => 'send-activation-link',
+                                'id' => $newUserId, 
+                                'message' => 'un lien vous a été envoyé par e-mail pour activer votre compte, si vous ne l\'avez pas reçu, cliquez ici pour le renvoyer']);
       }
     }
     $this->render('user', ['userForm' => 'register', 'inputButton' => 'inscription']);
       
+  }
+  
+  public function sendActivationLink() {
+    if (isset($_POST['send-method'])) {
+      $id = $_POST['id'];
+      $sendMethod = $_POST['send-method'];
+      $userManager = new UserManager;
+      $selectedUser = $userManager->findById($id);
+      if ($selectedUser) {
+        //$user = new User;
+        //$user->hydrate($user, $selectedUser);
+        $token = AccountController::generateToken();
+        //$user->setToken($token);
+        $userManager->update(['token' => $token], $id);
+        AccountController::sendActivationLink($id, $token, $sendMethod);
+        $this->render('user', ['userForm' => 'send-activation-link',
+                                        'id' => $id,
+                                        'message' => 'un message contenant un lien vient de vous être envoyé, si vous ne l\'avez pas reçu, cliquez ici pour le renvoyer']);
+      }
+      else {
+        $_SESSION['error'] = 'désolé, je ne trouve pas ce compte';
+        header('location: '.ROOT_URL.'/user/register');
+      }
+    }
+    $this->render('user', ['userForm' => 'send-activation-link', 'id' => $id]);
   }
   public function connect() {
     if (isset($_POST['login']) && !empty($_POST['login']) && isset($_POST['password'])  && !empty($_POST['password'])) {
@@ -65,7 +99,7 @@ class UserController extends AbstractController {
       }
       else {
         if (password_verify($password, $userToConnect['password'])) {
-          echo 'connecté';
+          //echo 'connecté';
           $this->setUserSession($userToConnect);
           $this->render('user', ['userForm' => 'logout']);
         }
@@ -96,5 +130,47 @@ class UserController extends AbstractController {
       $this->render('user', ['userForm' => 'connect', "message" => 'vous n\'êtes pas connecté']);
     }
     
+  }
+  
+  public function checkUserRights(int $ownerId , int $receiverId) {
+    $userRight = [];
+
+    if ((isset($_SESSION['user'])) && !empty($_SESSION['user'])) {
+      $userRight['status'] = 'connected';
+       
+       // l'utilisateur est le propriétaire du calendrier ou le calendrier est en cours de création
+      if ($_SESSION['user']['id'] == $ownerId || $_SESSION['calendar']['id'] == 0) {
+        $userRight['role'] = 'owner';
+      }
+      
+      // l'utilisateur est le destinataire du calendrier ou le calendrier est public
+      else if ($_SESSION['user']['id'] == $receiverId || $receiverId == 0) {
+        $userRight['role'] = 'receiver';
+      }
+      
+      else {
+        $userRight['role'] = 'forbidden';
+      }
+     }
+     
+     else {
+       $userRight['status'] = 'unconnected';
+       // uti%isateur non connecté, calendrier en cours de créatuon 
+      if (isset($_SESSION['calendar']) && $_SESSION['calendar']['id'] == 0) {
+      $userRight['role'] = 'owner';
+      }
+      //utilisateur non connecté, calendrier oublic
+      else if ($receiverId == 0) {
+      $userRight['role'] = 'receiver';
+      }
+      else {
+      $userRight['role'] = 'forbidden';
+      }
+     }
+    return $userRight;
+  }
+  public function successMessage(string $message) {
+    $detail = User::MESSAGES[$message];
+    $this->render('user', ['message' => $detail]);
   }
 }

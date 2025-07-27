@@ -9,7 +9,7 @@
 <?php
 if ($userForm) {
   include_once(ROOT.'/templates/_user-'.$userForm.'-form.html');
-  var_dump($_SESSION);
+  //var_dump($_SESSION);
 }
 ?>
 <h3>Bienvenue <?= $_SESSION['user']['name'] ?></h3>
