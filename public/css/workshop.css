@@ -1,0 +1,26 @@
+* {
+		box-sizing: border-box;
+	}
+
+	body {
+	  padding: 10vh 0;
+		overflow: auto;
+		width: clamp(45ch, 50%, 70ch);
+		margin: auto;
+		background-color: black;
+		filter: drop-shadow(0 0 10px white);
+		font-family: "Comic Sans MS", "Comic Sans", cursive;
+		color: white;
+		font-size: 1.5rem;	
+	}
+	h1 {
+		color: red;
+		text-align: center
+	}
+	.link {
+		display: block;
+		padding: 1em 2em;
+	}
+	a {
+		color: lightblue; 
+	}

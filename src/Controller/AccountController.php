@@ -36,20 +36,24 @@ class AccountController {
     if (!$selectedUser) {
       $_SESSION['error'] = 'Il n\'y a pas de compte à ce nom';
       header('location: '.ROOT_URL.'/user/register');
+      exit;
     }
     else {
       if ($selectedUser['active'] == 1) {
         $_SESSION['error'] = 'Le compte est déjà actif';
         header('location: '.ROOT_URL.'/user/login');
+        exit;
       }
       else if ($selectedUser['token'] == $token) {
         //$newUser = $user->hydrate($selectedUser);
         $user->update(['active' => 1], $id);
         header('location: '.ROOT_URL.'/user/successMessage/accountActivated');
+        exit;
       }
       else {
         $_SESSION['error'] = 'la clé de contrôle est absente ou ne correspond pas, cliquer pour (r)envoyer un lien d\'activation';
         header('location: '.ROOT_URL.'/user/sendActivationLink/'.$id);
+        exit;
       }
     }
   }
