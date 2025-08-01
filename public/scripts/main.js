@@ -155,14 +155,12 @@ function displayPreview() {
 	demoZone.innerHTML = '';
 	const mainForm = document.getElementById('main-form');
 	const inputList = mainForm.getElementsByTagName('input');
-	//console.log(inputList);
 	const parameters = {};
 	
 	for (let inputItem of inputList) {
 		inputValue = inputItem.value;
 		
 		if ((inputItem.type === 'checkbox' || inputItem.type === 'radio') && inputItem.checked === true){
-			//console.log(inputValue + inputItem.checked);
 			parameters[inputItem.name] = inputItem.value;
 		}
 		else if (inputItem.type != 'checkbox' && inputItem.type != 'radio') {
@@ -198,6 +196,3 @@ function displayPreview() {
 	game.createGame();
 	
 }
-
-
-

@@ -77,9 +77,9 @@ class Memory {
 			
 
 			this.memoryCards[i]['htmlElement'].setAttribute('type', 'image');
-			this.memoryCards[i]['htmlElement'].setAttribute('src', './data/images/question-mark.png');
+			this.memoryCards[i]['htmlElement'].setAttribute('src', '../images/question-mark.png');
 			this.memoryCards[i]['htmlElement'].setAttribute('class', 'memory-card-back');
-			this.memoryCards[i]['hiddenImgSrc'] = './data/images/' + this.graphicTheme + '/' + this.graphicTheme +' ('+ j + ').png';
+			this.memoryCards[i]['hiddenImgSrc'] = '../images/' + this.graphicTheme + '/' + this.graphicTheme +' ('+ j + ').png';
 			this.memoryCards[i]['htmlElement'].setAttribute('value', '?');
 
 			displayZone.appendChild(this.memoryCards[i]['htmlElement']);
@@ -125,12 +125,12 @@ class Memory {
 				setTimeout(function() {
 					
 					card['htmlElement'].setAttribute('value', '?');
-					card['htmlElement'].setAttribute('src', './data/images/question-mark.png');
+					card['htmlElement'].setAttribute('src', '../images/question-mark.png');
 
 					for (let turnedCard of turnedCards) {
 
 						turnedCard.setAttribute('class', 'memory-card-back');
-						turnedCard.setAttribute('src', './data/images/question-mark.png');
+						turnedCard.setAttribute('src', '../images/question-mark.png');
 						turnedCard.setAttribute('value', '?');
 					}
 				}, 750);

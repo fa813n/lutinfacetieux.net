@@ -1,2 +1,4 @@
 <h1>home page</h1>
-<?= $message ?>
+<?php
+include_once(ROOT.'/templates/'.$include.'.html');
+?>

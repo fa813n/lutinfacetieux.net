@@ -21,7 +21,7 @@ class LettersToSymbols
 		const mixedValues = mixArray(arrayOfValues);
 		mixedValues.forEach(setImagePath);
 		function setImagePath(value) {
-			imagePaths.push('<img src="./data/images/' + graphicTheme + '/' + graphicTheme +' ('+ value + ').png">');
+			imagePaths.push('<img src="../images/' + graphicTheme + '/' + graphicTheme +' ('+ value + ').png">');
 		}
 
 		const encodedAlphabet = associate(alphabet, imagePaths);

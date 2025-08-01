@@ -27,12 +27,18 @@ abstract class AbstractController {
   }
   
   public function index (/*array $data = []*/) {
-    $indexContent = $this->indexContent ?? [];
-    print_r($indexContent);
+    /*$indexContent = $this->indexContent ?? [];
+    print_r($indexContent);*/
+    //$entity = str_replace('Controller', '', ge)
     $classNameParts = explode('\\', get_class($this));
-    $page = str_replace('Controller','',(lcfirst(end($classNameParts))));
+    $entityName = str_replace('Controller','',(end($classNameParts)));
+    $entity = '\Workshop\\Entity\\'.$entityName;
+    $page = lcfirst($entityName);
+    $indexContent = defined($entity.'::INDEX_CONTENT') ? $entity::INDEX_CONTENT : ['include' => ''];
+    //$indexContent = [];
+    //print_r($entity);
     $this->render($page, $indexContent);
     //print_r($indexContent);
-    print_r($this->indexContent);
+    //print_r($this->indexContent);
   }
 }

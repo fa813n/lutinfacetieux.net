@@ -26,7 +26,7 @@ class GameController extends AbstractController {
   }
   public function createGame() {
     $_SESSION['game']['id'] = 0;
-    $this->render('game', ['include' => 'edit']);
+    $this->render('game', ['include' => 'edit-form', 'scripts' => Game::SCRIPTS]);
   }
   private function loadGame(int $id):Game {
     //
