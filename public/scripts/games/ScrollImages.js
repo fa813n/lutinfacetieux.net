@@ -18,7 +18,7 @@ class ScrollImages {
 				letterDivContent = '<span class="scroll-images" style="font-size:48px">' + letter.toUpperCase() + '</span>';
 			}
 			else {
-				letterDivContent = '<img src ="../images/' + graphicTheme + '/' + graphicTheme + ' ('+ ((Math.floor(Math.random()*31)) + 1) + ').png" class="scroll-image-sample">';
+				letterDivContent = '<img src ="' + imagesFolderPath + graphicTheme + '/' + graphicTheme + ' ('+ ((Math.floor(Math.random()*31)) + 1) + ').png" class="scroll-image-sample">';
 			}
 		}
 		let letterDiv = document.getElementById(divId);

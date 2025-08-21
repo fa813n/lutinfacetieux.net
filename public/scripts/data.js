@@ -9,6 +9,8 @@ const answerZone = document.getElementById('answer');
 const instructionsZone = document.getElementById('instructions');
 const demoZone = document.getElementById('demo');
 
+const imagesFolderPath = 'http://localhost:8080/lutinfacetieux/images/';
+
 let urlParams =  new URLSearchParams(document.location.search);
 let cellNumber = urlParams.get("cellNumber");
 //console.log(dateGames[cellNumber])

@@ -5,15 +5,19 @@ use Toolbox\ErrorDisplay;
 
 abstract class AbstractController {
   
+  private function getEntityName():string {
+    $classNameParts = explode('\\', get_class($this));
+    $entityName = str_replace('Controller','',(end($classNameParts)));
+    return(lcfirst($entityName));
+  }
   /**
    * @param $file fichier contenant le html specifique à la page demandée
    * @param $data données générées par le controlleur
    * @param $template le template choisi (ex: calendrier utilisateur sans menu)
    */
-
   public function render(string $page, array $data = [], string $template = 'main') {
-    
-    $data['page'] = ROOT.'/templates/pages/'.$page.'.php';
+    $folder = $data['folder'] ?? $this->getEntityName();
+    $data['page'] = ROOT.'/templates/pages/'.$folder.'/'.$page.'.php';
     $data['errorMessage'] = ErrorDisplay::displayErrorMessage()['message'];
     $data['errorClass'] = ErrorDisplay::displayErrorMessage()['class'];
     
@@ -26,19 +30,12 @@ abstract class AbstractController {
     require_once(ROOT.'/templates/layout.php');
   }
   
-  public function index (/*array $data = []*/) {
-    /*$indexContent = $this->indexContent ?? [];
-    print_r($indexContent);*/
-    //$entity = str_replace('Controller', '', ge)
-    $classNameParts = explode('\\', get_class($this));
-    $entityName = str_replace('Controller','',(end($classNameParts)));
+  public function index () {
+    $page = $this->getEntityName();
+    $entityName = ucfirst($page);
     $entity = '\Workshop\\Entity\\'.$entityName;
-    $page = lcfirst($entityName);
     $indexContent = defined($entity.'::INDEX_CONTENT') ? $entity::INDEX_CONTENT : ['include' => ''];
-    //$indexContent = [];
-    //print_r($entity);
+    
     $this->render($page, $indexContent);
-    //print_r($indexContent);
-    //print_r($this->indexContent);
   }
 }

@@ -1,6 +1,9 @@
 <main>
 		<section id="workshop">
-			<form id="main-form">
+		  
+			<form  method="post" action="<?= ROOT_URL ?>/game/displayGame/<?= $gridId ?>/<?= $cellNumber ?>" id="main-form">
+			  <input type="hidden" name="gridId" value="<?= $gridId ?>">
+		  <input type="hidden" name="cellNumber" value="<?= $cellNumber ?>">
 			<fieldset><legend>Choisir le message et le jeu</legend>
 				<p>
 				<label for="message">Ecrivez votre message</label>
@@ -46,8 +49,11 @@
 				<!--
 				<button onclick="displayPreview()">Prévisualisation</button>
 				-->
+			
+			<button type="button" onclick="displayPreview()">Prévisualisation</button>
+			<!--<input type="hidden" name="id" value="<?= $id ?>">-->
+			<input type="submit" value="Valider">
 			</form>
-			<button onclick="displayPreview()">Prévisualisation</button>
 		</section>
 		
 		<section id="preview">

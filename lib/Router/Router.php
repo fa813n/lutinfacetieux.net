@@ -38,7 +38,7 @@ public function start() {
     
   }
   else {
-    $controller = new \Workshop\Entity\Homepage;
+    $controller = new \Workshop\Controller\HomepageController;
     $controller->index();
   }
 

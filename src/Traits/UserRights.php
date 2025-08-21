@@ -1,10 +1,11 @@
 <?php
-namespace Workshop\Tools
+namespace Workshop\Traits
 trait UserRights {
-  public function checkRights(int $userId, array $object):string {
+  public function checkRights(array $properties):string {
+    $userId = $_SESSION['user']['id'] ?? 0;
     $status = '';
-    $ownerId = $object['$ownerId'];
-    $receiverId = $object['receiverId'];
+    $ownerId = $properties['$ownerId'];
+    $receiverId = $properties['receiverId'];
     if (($userId === $ownerId) || ($ownerId === 0) {
       $status = 'owner';
     }
@@ -14,5 +15,6 @@ trait UserRights {
     else {
       $status = 'forbidden';
     }
+    return $status;
   }
 }

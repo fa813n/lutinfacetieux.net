@@ -1,0 +1,92 @@
+<form
+    method="post"
+    action="<?= ROOT_URL ?>/grid/displayGrid/<?= $gridId ?>"
+    id="grid-edit-form"
+>
+    <fieldset>
+        <legend>Que Voulez-vous créer?</legend>
+        <div>
+            <input type="radio" name="frame" value="board" id="board" />
+            <label for="board">Un plateau de jeu</label>
+        </div>
+
+        <div>
+            <input type="radio" name="frame" value="calendar" id="calendar" />
+            <label for="calendar">Un calendrier</label>
+            <section class="additional-parameters">
+                <label for="start-date">Premier jour</label>
+                <input
+                    type="date"
+                    name="startDate"
+                    value="<?= $startDate ?>"
+                    id="start-date"
+                />
+                <label for="end-date">Dernier jour</label>
+                <input
+                    type="date"
+                    name="endDate"
+                    value="<?= $endDate ?>"
+                    id="end-date"
+                />
+            </section>
+        </div>
+
+        <div>
+            <input type="radio" name="frame" value="set" id="set" />
+            <label for="set">Une série de jeux indépendants</label>
+            <section class="additional-parameters">
+                <label for="number-of-cells">Nombre de jeux</label>
+                <input
+                    type="number"
+                    min="1"
+                    max="30"
+                    name="numberOfCells"
+                    value="<?= $numberOfCells ?? 4 ?>"
+                    id="number-of-cells"
+                />
+            </section>
+        </div>
+
+        <div>
+            <input type="radio" name="frame" value="unique" id="unique" />
+            <label for="unique">Une énigme unique</label>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <label for="grid-name">Nom du jeu:</label>
+        <input
+            type="text"
+            name="gridName"
+            value="<?= $gridName ?? '' ?>"
+            id="grid-name"
+        />
+    </fieldset>
+
+    <fieldset>
+        <label for="receiver">Destinataire du jeu</label>
+        <div>
+            <input type="radio" name="receiver" value="self" id="self" />
+            <label for="self">Moi-même</label>
+        </div>
+
+        <div>
+            <input type="radio" name="receiver" value="public" id="public" />
+            <label for="public">Tout le monde</label>
+        </div>
+
+        <div>
+            <input type="radio" name="receiver" value="e-mail" id="e-mail" />
+            <label for="e-mail">Un(e) amie, je renseigne son e-mail</label>
+            <input
+                type="email"
+                name="receiver-email"
+                value="<?= $receiver ?? '' ?>"
+            />
+        </div>
+    </fieldset>
+    <input type="hidden" name="gridId" value="<?= $gridId ?>">
+    <button type="button" onclick="displayPreview()">Prévisualisation</button>
+			<!--<input type="hidden" name="id" value="<?= $id ?>">-->
+			<input type="submit" value="Valider">
+</form>

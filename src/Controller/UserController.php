@@ -8,6 +8,21 @@ use \Workshop\Entity\User;
 
 class UserController extends AbstractController {
   
+  public function index() {
+    $userForm = '';
+    $userName = '';
+    if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
+      $userForm = 'logout';
+      $userName = $_SESSION['user']['name'];
+    }
+     else {
+       $userForm = 'connect';
+     }
+    $this->render('user', 
+                  ['userForm' => $userForm,
+                  'userName' => $userName]);
+  }
+  
   public function createUser(array $newUser):int {
     $user = new User;
     $userManager = new userManager;
@@ -123,7 +138,9 @@ class UserController extends AbstractController {
         $this->render('user', ['userForm' => 'connect', "message" => 'vous êtes maintenant déconnecté']);
       }
       else {
-        $this->render('user', ['userForm' => 'logout', "message" => 'vous êtes connecté en tant que '.$_SESSION['user']['name'].', cliquez ici our vous déconnecter: ']);
+        $this->render('user', 
+                      ['userForm' => 'logout', 
+                      'userName' => $_SESSION['user']['name']]);
       }
     }
     else {
