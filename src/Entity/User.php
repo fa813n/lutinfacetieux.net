@@ -82,7 +82,7 @@ class User extends AbstractController {
   }
   */
   
-  
+  /*
   public function register() {
         // On vérifie si le formulaire est valide
         if (isset($_POST['login']) && !empty($_POST['login']) && isset($_POST['password'])  && !empty($_POST['password'])) {
@@ -123,6 +123,6 @@ class User extends AbstractController {
 
         $this->render('user', ['userForm' => 'register', 'inputButton' => 'inscription']);
     }
-    
+ */   
     
 }

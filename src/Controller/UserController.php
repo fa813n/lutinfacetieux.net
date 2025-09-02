@@ -41,12 +41,17 @@ class UserController extends AbstractController {
   }
   
   private function setUserSession(array $connectedUser) {
+    foreach ($connectedUser as $key => $value) {
+      $_SESSION['user'][$key] = $value;
+    }
     //var_dump($connectedUser);
-    $user = new User;
+    /*$user = new User;
     $user->setLogin($connectedUser['login'])
          ->setName($connectedUser['name'])
          ->setActive($connectedUser['active'])
          ->setSession();
+         */
+         
   }
   
   public function register() {
@@ -114,7 +119,6 @@ class UserController extends AbstractController {
       }
       else {
         if (password_verify($password, $userToConnect['password'])) {
-          //echo 'connecté';
           $this->setUserSession($userToConnect);
           $this->render('user', ['userForm' => 'logout']);
         }
@@ -149,43 +153,6 @@ class UserController extends AbstractController {
     
   }
   
-  public function checkUserRights(int $ownerId , int $receiverId) {
-    $userRight = [];
-
-    if ((isset($_SESSION['user'])) && !empty($_SESSION['user'])) {
-      $userRight['status'] = 'connected';
-       
-       // l'utilisateur est le propriétaire du calendrier ou le calendrier est en cours de création
-      if ($_SESSION['user']['id'] == $ownerId || $_SESSION['calendar']['id'] == 0) {
-        $userRight['role'] = 'owner';
-      }
-      
-      // l'utilisateur est le destinataire du calendrier ou le calendrier est public
-      else if ($_SESSION['user']['id'] == $receiverId || $receiverId == 0) {
-        $userRight['role'] = 'receiver';
-      }
-      
-      else {
-        $userRight['role'] = 'forbidden';
-      }
-     }
-     
-     else {
-       $userRight['status'] = 'unconnected';
-       // uti%isateur non connecté, calendrier en cours de créatuon 
-      if (isset($_SESSION['calendar']) && $_SESSION['calendar']['id'] == 0) {
-      $userRight['role'] = 'owner';
-      }
-      //utilisateur non connecté, calendrier oublic
-      else if ($receiverId == 0) {
-      $userRight['role'] = 'receiver';
-      }
-      else {
-      $userRight['role'] = 'forbidden';
-      }
-     }
-    return $userRight;
-  }
   public function successMessage(string $message) {
     $detail = User::MESSAGES[$message];
     $this->render('user', ['message' => $detail]);

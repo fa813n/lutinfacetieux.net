@@ -1,12 +1,17 @@
 <?php
 namespace Workshop\Traits
 trait UserRights {
-  public function checkRights(array $properties):string {
+  /**
+   * @properties array contenant la liste des propriétés de l'objet sur lequel on souhaite connaître les droits utilisateur
+   * @return $status une chaine de caractères indiquant le status utilisateur par rapport à l'objet
+   */
+   /*
+   public function checkRights(array $properties):string {
     $userId = $_SESSION['user']['id'] ?? 0;
     $status = '';
     $ownerId = $properties['$ownerId'];
     $receiverId = $properties['receiverId'];
-    if (($userId === $ownerId) || ($ownerId === 0) {
+    if (($userId === $ownerId) || ($ownerId === 0)) {
       $status = 'owner';
     }
     else if (($userId === $receiverId) || $receiverId === 0) {
@@ -17,4 +22,6 @@ trait UserRights {
     }
     return $status;
   }
+  */
+  
 }

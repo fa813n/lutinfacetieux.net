@@ -13,7 +13,7 @@ abstract class AbstractController {
   /**
    * @param $file fichier contenant le html specifique à la page demandée
    * @param $data données générées par le controlleur
-   * @param $template le template choisi (ex: calendrier utilisateur sans menu)
+   * @param $template le template choisi 
    */
   public function render(string $page, array $data = [], string $template = 'main') {
     $folder = $data['folder'] ?? $this->getEntityName();
@@ -38,4 +38,31 @@ abstract class AbstractController {
     
     $this->render($page, $indexContent);
   }
+  public function hydrate(object $obj, array $data):void {
+    foreach ($data as $key => $value) {
+      $setter = 'set'.ucfirst($key);
+      if (method_exists($obj, $setter)) {
+        $obj->$setter($value);
+      }
+    }
+  }
+  
+  public function checkRights(array $properties):string {
+    $userId = $_SESSION['user']['id'] ?? 0;
+    $status = '';
+    $ownerId = $properties['owner'];
+    $receiverId = $properties['receiver'];
+    if (($userId === $ownerId) || ($ownerId === 0)) {
+      $status = 'owner';
+    }
+    else if (($userId === $receiverId) || $receiverId === 0) {
+      $status = 'receiver';
+    }
+    else {
+      $status = 'forbidden';
+    }
+    return $status;
+  }
+  
+  
 }

@@ -5,8 +5,8 @@ namespace Workshop\Entity;
 class Grid {
   private int $id = 0;
   private int $owner = 0;
-  private int $receiver = 0;
-  private ?string $frame //calendar, board, single, set
+  private string $receiver = '';
+  private ?string $frame; //calendar, board, single, set
   private ?string $content;
   
   public function getId(): ?id {

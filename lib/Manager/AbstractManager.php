@@ -89,13 +89,13 @@ abstract class AbstractManager {
   public function delete(int $id) {
         return $this->request("DELETE FROM {$this->table} WHERE id = ?", [$id]);
   }
-  public function hydrate($obj, array $data) {
-    foreach ($data as $key => $value) {
-      $setter = 'set'.ucfirst($key);
-      if (method_exists($obj, $setter)) {
-        $obj->$setter($value);
-      }
-    }
-    return $obj;
-  }
+  // public function hydrate($obj, array $data) {
+//     foreach ($data as $key => $value) {
+//       $setter = 'set'.ucfirst($key);
+//       if (method_exists($obj, $setter)) {
+//         $obj->$setter($value);
+//       }
+//     }
+//     return $obj;
+//   }
 }

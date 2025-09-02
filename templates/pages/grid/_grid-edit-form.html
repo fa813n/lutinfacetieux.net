@@ -1,16 +1,49 @@
 <form
     method="post"
-    action="<?= ROOT_URL ?>/grid/displayGrid/<?= $gridId ?>"
+    action="<?= ROOT_URL ?>/grid/displayGrid/<?= $id ?>"
     id="grid-edit-form"
+    class="grid-form"
 >
-    <fieldset>
+    <fieldset class="grid-form_frame">
         <legend>Que Voulez-vous créer?</legend>
-        <div>
-            <input type="radio" name="frame" value="board" id="board" />
-            <label for="board">Un plateau de jeu</label>
+        <div class="grid-form_frame--single">
+            <input type="radio" name="frame" value="single" id="single" />
+            <label for="single">Une énigme unique</label>
         </div>
 
-        <div>
+        <div class="grid-form_frame--set">
+            <input type="radio" name="frame" value="set" id="set" />
+            <label for="set">Une série de jeux indépendants</label>
+            <section class="additional-parameters">
+                <label for="number-of-games">Nombre de jeux</label>
+                <input
+                    type="number"
+                    min="1"
+                    max="30"
+                    name="numberOfCells"
+                    value="<?= $numberOfGames ?? 4 ?>"
+                    id="number-of-games"
+                />
+            </section>
+        </div>
+
+        <div class="grid-form_frame--board">
+            <input type="radio" name="frame" value="board" id="board" />
+            <label for="board">Une suite de jeux</label>
+            <section class="additional-parameters">
+                <label for="number-of-cells">Nombre de jeux</label>
+                <input
+                    type="number"
+                    min="1"
+                    max="30"
+                    name="numberOfCells"
+                    value="<?= $numberOfCells ?? 4 ?>"
+                    id="number-of-cells"
+                />
+            </section>
+        </div>
+
+        <div class="grid-form_frame--calendar">
             <input type="radio" name="frame" value="calendar" id="calendar" />
             <label for="calendar">Un calendrier</label>
             <section class="additional-parameters">
@@ -30,30 +63,9 @@
                 />
             </section>
         </div>
-
-        <div>
-            <input type="radio" name="frame" value="set" id="set" />
-            <label for="set">Une série de jeux indépendants</label>
-            <section class="additional-parameters">
-                <label for="number-of-cells">Nombre de jeux</label>
-                <input
-                    type="number"
-                    min="1"
-                    max="30"
-                    name="numberOfCells"
-                    value="<?= $numberOfCells ?? 4 ?>"
-                    id="number-of-cells"
-                />
-            </section>
-        </div>
-
-        <div>
-            <input type="radio" name="frame" value="unique" id="unique" />
-            <label for="unique">Une énigme unique</label>
-        </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="grid-form_name">
         <label for="grid-name">Nom du jeu:</label>
         <input
             type="text"
@@ -63,8 +75,9 @@
         />
     </fieldset>
 
-    <fieldset>
+    <fieldset class="grid-form_receiver">
         <label for="receiver">Destinataire du jeu</label>
+        <!--
         <div>
             <input type="radio" name="receiver" value="self" id="self" />
             <label for="self">Moi-même</label>
@@ -77,16 +90,18 @@
 
         <div>
             <input type="radio" name="receiver" value="e-mail" id="e-mail" />
-            <label for="e-mail">Un(e) amie, je renseigne son e-mail</label>
-            <input
-                type="email"
-                name="receiver-email"
-                value="<?= $receiver ?? '' ?>"
-            />
-        </div>
+            <label for="email">Un(e) amie, je renseigne son e-mail</label>
+            -->
+        <input 
+          type="text" 
+          <!-- type="email" -->
+          name="receiver" 
+          value="<?= $receiver ?? '' ?>"
+        />
+        <!--</div>-->
     </fieldset>
-    <input type="hidden" name="gridId" value="<?= $gridId ?>">
+    <input type="hidden" name="id" value="<?= $id ?>" />
     <button type="button" onclick="displayPreview()">Prévisualisation</button>
-			<!--<input type="hidden" name="id" value="<?= $id ?>">-->
-			<input type="submit" value="Valider">
+    <!--<input type="hidden" name="id" value="<?= $id ?>">-->
+    <input type="submit" value="Valider" />
 </form>

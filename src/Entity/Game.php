@@ -9,6 +9,8 @@ class Game { //extends Entity
   private ?int $cell;
   //private ?string $chosenGame;
   private ?string $content;
+  private ?int $owner;
+  private ?int $receiver;
 
   const INDEX_CONTENT = ["include" => "menu"];
   const SCRIPTS = [
@@ -30,7 +32,7 @@ class Game { //extends Entity
     echo '<p style=color:pink">game constructor : '.var_dump($this).'</p>';
   }
   */
-  public function getId(): ?id {
+  public function getId(): int {
     return $this->id;
   }
 
@@ -69,4 +71,38 @@ class Game { //extends Entity
     $this->content = $content;
     return $this;
   }
+  
+  public function getOwner():int {
+    return $this->owner;
+  }
+  public function setOwner(int $owner):self {
+    $this->owner = $owner;
+    return $this;
+  }
+  
+  public function getReceiver():int {
+    return $this->receiver;
+  }
+  public function setReceiver(int $receiver):self {
+    $this->receiver = $receiver;
+    return $this;
+  }
+  /*
+  public function getGrid():int {
+    return $this->grid;
+  }
+  public function setGrid(int $grid):self {
+    $this->grid = $grid;
+    return $this;
+  }
+  
+  public function getCell():int {
+    return $this->cell;
+  }
+  public function setCell(int $cell):self {
+    $this->cell = $cell;
+    return $this;
+  }
+  */
+  
 }

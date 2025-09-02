@@ -1,0 +1,117 @@
+<main>
+    <section id="workshop">
+        <form
+            method="post"
+            action="<?= ROOT_URL ?>/game/displayGame/<?= $id ?>"
+            id="main-form"
+        >
+            <fieldset>
+                <legend>Choisir le message et le jeu</legend>
+                <p>
+                    <label for="message">Ecrivez votre message</label>
+                    <input
+                        type="text"
+                        placeholder="Le message à coder"
+                        name="message"
+                        id="message"
+                        value="<?= $message ?>"
+                    />
+                </p>
+                <p>
+                    <label for="game">choisissez le jeu</label>
+                    <select
+                        id="chosen-game"
+                        name="chosen-game"
+                        onchange="displayAdditionalForm()"
+                    >
+                        <option value=""></option>
+                        <option value="letters-to-symbols">
+                            substitution de lettres
+                        </option>
+                        <option value="flags">Drapeaux</option>
+                        <option value="scroll-images">
+                            Images alternantes
+                        </option>
+                        <option value="memory">Memory</option>
+                    </select>
+                </p>
+            </fieldset>
+            <div id="additional-form"></div>
+
+            <template id="difficulty">
+                <fieldset>
+                    <legend>Choisir la difficulté</legend>
+
+                    <input
+                        type="radio"
+                        id="easy"
+                        name="difficulty"
+                        value="easy"
+                    />
+                    <label for="html">easy</label><br />
+                    <input
+                        type="radio"
+                        id="medium"
+                        name="difficulty"
+                        value="medium"
+                    />
+                    <label for="medium">medium</label><br />
+                    <input
+                        type="radio"
+                        id="hard"
+                        name="difficulty"
+                        value="hard"
+                    />
+                    <label for="hard">hard</label>
+                </fieldset>
+            </template>
+
+            <template id="graphic-theme">
+                <fieldset>
+                    <legend>Choisir le thème graphique</legend>
+
+                    <input
+                        type="radio"
+                        id="christmas"
+                        name="graphic-theme"
+                        value="christmas"
+                    />
+                    <label for="christmas">Noël</label><br />
+                    <input
+                        type="radio"
+                        id="halloween"
+                        name="graphic-theme"
+                        value="halloween"
+                    />
+                    <label for="halloween">Halloween</label><br />
+                    <input
+                        type="radio"
+                        id="music"
+                        name="graphic-theme"
+                        value="music"
+                    />
+                    <label for="music">Musique</label><br />
+                </fieldset>
+            </template>
+            <!--
+				<button onclick="displayPreview()">Prévisualisation</button>
+				-->
+
+            <button type="button" onclick="displayPreview()">
+                Prévisualisation
+            </button>
+            <!--<input type="hidden" name="id" value="<?= $id ?>">-->
+            <input type="hidden" name="id" value="<?= $id ?>" />
+            <input type="hidden" name="owner" value="<?= $owner ?>" />
+            <input type="hidden" name="receiver" value="<?= $receiver ?>" />
+            <input type="hidden" name="grid" value="<?= $grid ?>" />
+            <input type="hidden" name="cell" value="<?= $cell ?>"/>
+            <input type="submit" value="Valider" />
+        </form>
+    </section>
+
+    <section id="preview">
+        <h2>Le résultat ici:</h2>
+        <div id="demo"></div>
+    </section>
+</main>
