@@ -36,7 +36,19 @@
 	input[type=radio]:checked ~ .additional-parameters {
 	  display: block;
 	}
-	
+	/* Main menu */
+	#main-menu {
+	  width: 100%;
+	  margin: auto;
+	  .main-menu-list {
+	    display: flex;
+	    flex-direction: row;
+	    justify-content: space-between;
+	    .main-menu-item {
+	      display:; block;
+	    }
+	  }
+	}
 	#solution-zone {
 	border: 2px solid green;
 	color: green;

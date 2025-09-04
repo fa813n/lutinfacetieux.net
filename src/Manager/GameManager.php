@@ -28,5 +28,23 @@ class GameManager extends AbstractManager {
                   ],
                   $game->getId());
   }
+  public function getPublicList():array {
+    $publicList = [];
+    $publicGames = $this->findBy(['receiver' => 0]);
+    foreach ($publicGames as $publicGame) {
+      $id = $publicGame['id'];
+      $publicList[$id] = $publicGame;
+    }
+    return $publicList;
+  }
+  public function getPrivateList(int $ownerId):array {
+    $privateList = [];
+    $privateGames = $this->findBy(['owner' => $ownerId]);
+    foreach ($privateGames as $privateGame) {
+      $id = $privateGame['id'];
+      $privateList[$id] = $privateGame;
+    }
+    return $privateList;
+  }
   
 }

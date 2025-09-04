@@ -1,4 +1,3 @@
-<h3>header</h3>
 <div id="error-message" class="<?= $errorClass ?>">
   <?= $errorMessage ?>
 </div>

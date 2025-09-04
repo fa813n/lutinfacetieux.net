@@ -23,7 +23,11 @@ class GameController extends AbstractController {
     'scroll-images' => "games/ScrollImages"
   ];
   
-  
+  public function displayGameList() {
+    $gameList = $this->loadGameList();
+    $this->render('game-list', $gameList);
+  }
+  //$gameList = $this->displayGameList();
   public function createGame() {
     $userId = $_SESSION['user']['id'] ?? 0;
     $this->render("edit-game", [
@@ -92,17 +96,19 @@ class GameController extends AbstractController {
       }
     } 
     elseif (isset($_SESSION["game"][$id]) && !empty($_SESSION['game'][$id])) {
+      /*echo '<p>session loaded<p>';
+      var_dump($_SESSION['game'][$id]);*/
+      
       $gameParams = $_SESSION["game"][$id];
     }
     
     $gameAttributes['userRights'] = $userRights;
-    $gameAttributes['id'] = Utils::array_extract($gameParams, 'id');
-    //$gameAttributes['chosenGame'] = Utils::array_extract($gameParams, 'chosen-game');
-    $gameAttributes['owner'] = Utils::array_extract($gameParams, 'owner');
-    $gameAttributes['receiver'] = Utils::array_extract($gameParams, 'receiver');
+    $gameAttributes['id'] = (int)Utils::array_extract($gameParams, 'id');
+    $gameAttributes['owner'] = (int)Utils::array_extract($gameParams, 'owner');
+    $gameAttributes['receiver'] = (int)Utils::array_extract($gameParams, 'receiver');
     
-    $gameAttributes['grid'] = Utils::array_extract($gameParams, 'grid');
-    $gameAttributes['cell'] = Utils::array_extract($gameParams, 'cell');
+    $gameAttributes['grid'] = (int)Utils::array_extract($gameParams, 'grid');
+    $gameAttributes['cell'] = (int)Utils::array_extract($gameParams, 'cell');
     //on r#groupe les attributs restznt dans cont#nt
   
     $gameAttributes['content'] = (isset($gameParams['content']) && !empty($gameParams['content'])) ? Utils::array_extract($gameParams, 'content') : json_encode($gameParams);
@@ -131,8 +137,10 @@ class GameController extends AbstractController {
   }
   public function editGame($id) {
     $gameAttributes = $this->getGame($id);
-    echo '<br>game attributes:<br';
-    var_dump($gameAttributes);
+    // extract individual datas from 'content'
+    $content = json_decode(Utils::array_extract($gameAttributes, 'content'), 1);
+    $gameAttributes = array_merge($gameAttributes, $content) ;
+    
     if ($gameAttributes['userRights'] === 'owner') {
       $gameAttributes['scripts'] = Game::SCRIPTS;
       $this->render('edit-game', $gameAttributes);
@@ -142,34 +150,41 @@ class GameController extends AbstractController {
       header('location; ', ROOT.'/game');
     }
   }
-  public function displayGameList() {
+  private function loadGameList() {
     $gameList = [];
     if (isset($_SESSION['game'][0]) && !empty($_SESSION['game'][0])) {
-      $gameList['public'][0] = $_SESSION['game'][0];
+      $gameList['currentGame'] = $_SESSION['game'][0];
     }
     $gameManager = new GameManager;
+    $gameList['publicGames'] = $gameManager->getPublicList();
+
+    if (isset($_SESSION['user']) && !empty($_SESSION["user"])) {
+      $gameList['privateGames'] = $gameManager->getPrivateList($_SESSION['user']['id']);
+    }
+    return $gameList;
   }
   public function recordGame($id) {
     //in session
   }
   public function saveGame(int $id) {
     $gameAttributes = $this->getGame($id);
+    //echo 'saveGame $gameAttributes : <br>';
+    //var_dump($gameAttributes);
     if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
       if ($gameAttributes['userRights'] === 'owner'){
         $game = new Game;
+        $receiver = $gameAttributes['receiver'] === 0 ? $_SESSION['user']['id'] : $gameAttributes['receiver']; 
         $game/*->setId($gameAttributes['id'])*/
              ->setGrid(0)
              ->setCell(0)
              ->setContent($gameAttributes['content'])
-             ->setOwner($gameAttributes['owner'])
-             ->setReceiver($gameAttributes['receiver']);
+             ->setOwner($_SESSION['user']['id'])
+             ->setReceiver($receiver);
         $gameManager = new GameManager;
         if ($id === 0) {
           $newId = $gameManager->createGame($game);
-          foreach ($gameAttributes as $gameAttribute) {
-            $_SESSION['game'][$newId] = $gameAttribute;
-            unset($_SESSION['game'][0]);
-          }
+          $_SESSION['game'][$newId] = $gameAttributes;
+          unset($_SESSION['game'][0]);
         }
         else {
           $gameManager->updateGame($id);
@@ -186,7 +201,7 @@ class GameController extends AbstractController {
       $_SESSION['error'] = "vous devez être connecté pour sauvegarder vos création";
       header('location: '.ROOT_URL.'/user/connect');
       exit;
-      
     }
+    $this->render('game');
   }
 }

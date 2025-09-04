@@ -41,17 +41,9 @@ class UserController extends AbstractController {
   }
   
   private function setUserSession(array $connectedUser) {
-    foreach ($connectedUser as $key => $value) {
-      $_SESSION['user'][$key] = $value;
-    }
-    //var_dump($connectedUser);
-    /*$user = new User;
-    $user->setLogin($connectedUser['login'])
-         ->setName($connectedUser['name'])
-         ->setActive($connectedUser['active'])
-         ->setSession();
-         */
-         
+    $_SESSION['user']['id'] = $connectedUser['id'];
+    $_SESSION['user']['login'] = $connectedUser['login'];
+    $_SESSION['user']['name'] = $connectedUser['name'];
   }
   
   public function register() {
@@ -120,7 +112,10 @@ class UserController extends AbstractController {
       else {
         if (password_verify($password, $userToConnect['password'])) {
           $this->setUserSession($userToConnect);
-          $this->render('user', ['userForm' => 'logout']);
+          $this->render('user', [
+                                'userForm' => 'logout',
+                                'userName' => $userToConnect['name']
+                                ]);
         }
         else {
           $_SESSION['error'] = 'identifiant ou mot de passe incorrect';
@@ -128,9 +123,6 @@ class UserController extends AbstractController {
           exit;
         }
       }
-    }
-    else {
-      $_SESSION['error'] = 'identifiant ou mot de passe manquant';
     }
     $this->render('user', ['userForm' => 'connect']);
   }
