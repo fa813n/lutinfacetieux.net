@@ -2,6 +2,8 @@
 namespace Toolbox\Controller;
 
 use Toolbox\ErrorDisplay;
+use Toolbox\FlashMessage;
+use Workshop\Traits\UserRights;
 
 abstract class AbstractController {
   
@@ -18,8 +20,10 @@ abstract class AbstractController {
   public function render(string $page, array $data = [], string $template = 'main') {
     $folder = $data['folder'] ?? $this->getEntityName();
     $data['page'] = ROOT.'/templates/pages/'.$folder.'/'.$page.'.php';
-    $data['errorMessage'] = ErrorDisplay::displayErrorMessage()['message'];
+    /*$data['errorMessage'] = ErrorDisplay::displayErrorMessage()['message'];
     $data['errorClass'] = ErrorDisplay::displayErrorMessage()['class'];
+    */
+    $data['flashMessage'] = FlashMessage::displayMessage();
     
     extract($data);
     
@@ -29,7 +33,9 @@ abstract class AbstractController {
     
     require_once(ROOT.'/templates/layout.php');
   }
-  
+  /**
+   * génère une vue en fonction du nom de la rubrique
+   */
   public function index () {
     $page = $this->getEntityName();
     $entityName = ucfirst($page);
@@ -64,5 +70,8 @@ abstract class AbstractController {
     return $status;
   }
   
+  public function flashMessage(string $message, string $type = 'info'){
+    $_SESSION['flashMessage'] = ['message' => $message, 'type' => $type];
+  }
   
 }

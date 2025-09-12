@@ -11,8 +11,18 @@ class UserController extends AbstractController {
   public function index() {
     $userForm = '';
     $userName = '';
+    $message = '';
+    $id = 0;
     if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
-      $userForm = 'logout';
+      $id = (int)$_SESSION['user']['id'];
+      if ($_SESSION['user']['active'] === 0) {
+        $userForm = 'send-activation-link';
+        $message = 'Il faut que votre compte soit activé pour pouvoir enregistrer vos créations';
+        $this->flashMessage('ce compte n\'a pas été activé', 'warning');
+      }
+      else {
+        $userForm = 'logout';
+      }
       $userName = $_SESSION['user']['name'];
     }
      else {
@@ -20,7 +30,10 @@ class UserController extends AbstractController {
      }
     $this->render('user', 
                   ['userForm' => $userForm,
-                  'userName' => $userName]);
+                  'userName' => $userName,
+                  'message' => $message,
+                  'id' => $id
+                  ]);
   }
   
   public function createUser(array $newUser):int {
@@ -35,7 +48,7 @@ class UserController extends AbstractController {
     //AccountController::sendActivationMail($user);
     $userManager->createUser($user);
     $userId = $userManager->getNewId();
-    AccountController::sendActivationLink($userId, $token, 'displayLink');
+    AccountController::sendActivationLink($userId, $token, $newUser['login'], 'displayLink');
     return $userId;
     //header('location: '.ROOT_URL.'/account/activate/'.$userId);
   }
@@ -44,23 +57,29 @@ class UserController extends AbstractController {
     $_SESSION['user']['id'] = $connectedUser['id'];
     $_SESSION['user']['login'] = $connectedUser['login'];
     $_SESSION['user']['name'] = $connectedUser['name'];
+    $_SESSION['user']['active'] = $connectedUser['active'];
   }
   
   public function register() {
     $newUser = [];
     if (isset($_POST['login']) && !empty($_POST['login']) && isset($_POST['password'])  && !empty($_POST['password'])) {
       if ($_POST['password'] !== $_POST['password-confirm']) {
-        $_SESSION['error'] = 'le mot de passe et la confirmation ne correspondent pas';
+        $this->flashMessage('le mot de passe et la confirmation ne correspondent pas', 'error');
+        header('location: '.ROOT_URL.'/user/register');
+        exit;
+      }
+      if (!filter_var(trim($_POST['login']), FILTER_VALIDATE_EMAIL)) {
+        $this->flashMessage('erreur : addresse e-mail non valide!', 'error');
         header('location: '.ROOT_URL.'/user/register');
         exit;
       }
       $newUser['login'] = $_POST['login'];
-      $newUser['name'] = $_POST['name'] ?? $_POST['login'];
+      $newUser['name'] = (isset($_POST['name']) && !empty($_POST['name'])) ? $_POST['name'] : $_POST['login'];
       $newUser['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
       $userManager = new UserManager;
       if (!empty($userManager->findOneByLogin($newUser['login']))) {
-        $_SESSION['error'] = 'un utilisateur avec l\'adresse e-mail'.$newUser['login'].' existe déjà';
-        $this->render('user', ['formSubmit' => 'login']);
+        $this->flashMessage('un utilisateur avec l\'adresse e-mail'.$newUser['login'].' existe déjà', 'error');
+        $this->render('user', ['userForm' => 'connect', 'formSubmit' => 'login']);
       }
       else {
         $newUserId = $this->createUser($newUser);
@@ -74,24 +93,38 @@ class UserController extends AbstractController {
   }
   
   public function sendActivationLink() {
+    $id = 0;
+    if (isset($_SESSION['user'])) {
+      $id = (int)$_SESSION['user']['id'];
+    }
+    else {
+      $this->flashMessage('connectez-vous à votre compte pour pouvoir l\'activer', 'error');
+      header('location: '.ROOT_URL.'/user/connect');
+      exit;
+    }
     if (isset($_POST['send-method'])) {
-      $id = $_POST['id'];
+      if ((int)$_POST['id'] !== $id) {
+        $this->flashMessage('le compte à activer ne correspond pad à l\'utilisateur connecté', 'error');
+        unset($_SESSION['user']);
+        header('location: '.ROOT_URL.'/user/connect');
+        exit;
+      }
+      $id = (int)$_POST['id'];
       $sendMethod = $_POST['send-method'];
       $userManager = new UserManager;
       $selectedUser = $userManager->findById($id);
       if ($selectedUser) {
-        //$user = new User;
-        //$user->hydrate($user, $selectedUser);
         $token = AccountController::generateToken();
-        //$user->setToken($token);
         $userManager->update(['token' => $token], $id);
-        AccountController::sendActivationLink($id, $token, $sendMethod);
+        echo $selectedUser['login'];
+        AccountController::sendActivationLink($id, $token, $selectedUser['login'], $sendMethod);
+        $this->flashMessage('un message contenant un lien vient de vous être envoyé, si vous ne l\'avez pas reçu, cliquez ici pour le renvoyer', 'info');
         $this->render('user', ['userForm' => 'send-activation-link',
                                         'id' => $id,
                                         'message' => 'un message contenant un lien vient de vous être envoyé, si vous ne l\'avez pas reçu, cliquez ici pour le renvoyer']);
       }
       else {
-        $_SESSION['error'] = 'désolé, je ne trouve pas ce compte';
+        $this->flashMessage('désolé, je ne trouve pas ce compte', 'error');
         header('location: '.ROOT_URL.'/user/register');
       }
     }
@@ -99,27 +132,36 @@ class UserController extends AbstractController {
   }
   public function connect() {
     if (isset($_POST['login']) && !empty($_POST['login']) && isset($_POST['password'])  && !empty($_POST['password'])) {
-      $login = strip_tags($_POST['login']);
+      $login = strip_tags(trim($_POST['login']));
       $password = $_POST['password'];
-      //$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
       $userManager = new UserManager;
       $userToConnect = $userManager->findOneByLogin($login);
       if (!$userToConnect) {
-        $_SESSION['error'] = 'identifiant ou mot de passe incorrect';
-        header('location: '.ROOT_URL.'/user/register');
+        $this->flashMessage('identifiant ou mot de passe incorrect', 'error');
+        header('location: '.ROOT_URL.'/user/connect');
         exit;
       }
       else {
         if (password_verify($password, $userToConnect['password'])) {
           $this->setUserSession($userToConnect);
-          $this->render('user', [
-                                'userForm' => 'logout',
-                                'userName' => $userToConnect['name']
-                                ]);
+          if ($userToConnect['active'] === 0) {
+            $this->flashMessage('ce compte n\'a pas été activé', 'warning');
+            $this->render('user', [
+                                  'userForm' => 'send-activation-link',
+                                  'message' => 'cliquez pour recevoir le lien d\'activation',
+                                  'id' => $userToConnect['id']
+                                  ]);
+          }
+          else {
+            $this->render('user', [
+                                  'userForm' => 'logout',
+                                  'userName' => $userToConnect['name']
+                                  ]);
+          }
         }
         else {
-          $_SESSION['error'] = 'identifiant ou mot de passe incorrect';
-          header('location: '.ROOT_URL.'/user/register');
+          $this->flashMessage('identifiant ou mot de passe incorrect','error');
+          header('location: '.ROOT_URL.'/user/connect');
           exit;
         }
       }

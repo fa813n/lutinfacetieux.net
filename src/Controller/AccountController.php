@@ -12,23 +12,18 @@ class AccountController {
     return $token;
   }
   
-  static function sendActivationLink(int $userId, string $token, string $sendFunction = 'email'):void {
+  public static function sendActivationLink(int $userId, string $token, string $login, string $sendFunction = 'email'):void {
     //$token = self::generateToken();
     $link = ROOT_URL."/account/activate/$userId/$token";
     $message = "Pour acriver votre compte, cliquez sur <a href=\"$link\">le lien suivant.</a> Si lelien direct ne marche pas, copier-coller ceci dans la barre de recherche du navigateur : $link . À très bientôt!";
-    self::$sendFunction($userId, $message);
+    self::$sendFunction($login, $message);
   }
-  private static function email($userId, $message) {
-    
+  private static function email($login, $message) {
+    mail($login, 'activation de votre compte chez le lutin facetieux', $message);
   }
   private static function displayLink($userId, $message) {
     echo($message);
   }
-  /*
-  private function sendSms ($userId, $message) {
-    
-  }
-  */
 
   public static function activate(int $id, string $token) {
     $user = new UserManager;
@@ -47,6 +42,9 @@ class AccountController {
       else if ($selectedUser['token'] == $token) {
         //$newUser = $user->hydrate($selectedUser);
         $user->update(['active' => 1], $id);
+        if (isset($_SESSION['user']) && (int)$_SESSION['user']['id'] === $id ) {
+          $_SESSION['user']['active'] = 1;
+        }
         header('location: '.ROOT_URL.'/user/successMessage/accountActivated');
         exit;
       }

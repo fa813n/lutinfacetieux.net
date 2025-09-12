@@ -1,5 +1,8 @@
-<div id="error-message" class="<?= $errorClass ?>">
-  <?= $errorMessage ?>
+<header>
+  <h1>L'atelier du lutin facétieux</h1>
+</header>
+<div id="flash-message" class="<?= $flashMessage['class'] ?>">
+  <?= $flashMessage['message'] ?>
 </div>
 <nav id="main-menu">
   <ul class="main-menu-list">

@@ -1,5 +1,11 @@
 <form method="post" action="<?= ROOT_URL ?>/user/sendActivationLink">
   <p><?= $message ?></p>
+  <label for="id">cliquez ici pour envoyer le lien</label>
   <input type="hidden" name="id" value="<?= $id ?>">
-  <input type="submit" name="send-method" value="displayLink">cliquez ici pour envoyer le lien </input>
+  <input type="hidden" name="send-method" value="email">
+  <input type="submit" name="send" value="Envoyer le lien">
+  </form>
+  <form action="<?= ROOT_URL ?>/user/logout">
+  <label for="logout">Ou appuyer ci-dessous pour vous déconnecter</label>
+  <input type="submit" name="logout" value="Se déconnecter" id="logout">
 </form>

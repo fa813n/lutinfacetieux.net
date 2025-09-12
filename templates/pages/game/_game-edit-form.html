@@ -8,6 +8,16 @@
             <fieldset>
                 <legend>Choisir le message et le jeu</legend>
                 <p>
+                    <label for="title">Titre de l'énigme</label>
+                    <input
+                        type="text"
+                        name="title"
+                        id="title"
+                        placeholder="donnez un nom à l'énigme (facultatif)"
+                        value="<?= $title ?? '' ?>"
+                    />
+                </p>
+                <p>
                     <label for="message">Ecrivez votre message</label>
                     <input
                         type="text"
@@ -33,6 +43,7 @@
                             Images alternantes
                         </option>
                         <option value="memory">Memory</option>
+                        <option value="dobble">Dobble</option>
                     </select>
                 </p>
             </fieldset>
@@ -101,17 +112,19 @@
                 Prévisualisation
             </button>
             <!--<input type="hidden" name="id" value="<?= $id ?>">-->
+            <h2><?= $id ?></h2>
             <input type="hidden" name="id" value="<?= $id ?>" />
             <input type="hidden" name="owner" value="<?= $owner ?>" />
             <input type="hidden" name="receiver" value="<?= $receiver ?>" />
             <input type="hidden" name="grid" value="<?= $grid ?>" />
-            <input type="hidden" name="cell" value="<?= $cell ?>"/>
+            <input type="hidden" name="cell" value="<?= $cell ?>" />
             <input type="submit" value="Valider" />
         </form>
     </section>
 
     <section id="preview">
         <h2>Le résultat ici:</h2>
-        <div id="demo"></div>
+        <div id="instructions"></div>
+        <div id="game-zone"></div>
     </section>
 </main>

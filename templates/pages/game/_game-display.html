@@ -1,11 +1,5 @@
 <h1>Voici le jeu</h1>
-<div id="fill-me"></div>
-<p id="fill-me-too" style="color:pink"></p>
+<script>displayGame(<?= $parameters ?>)</script>
 <button onclick='displayGame(<?= $parameters ?>)'>Game</button>
-<div id="demo"></div>
-<form method="post">
-  <input type="submit" value="Modifier" formaction="<?= ROOT_URL ?>/game/editGame/<?= $id ?>">
-  <input type="submit" value="Enregistrer" formaction="<?= ROOT_URL ?>/game/saveGame/<?= $id ?>">
-</form>
-
-
+<div id="instructions"></div>
+<div id="game-zone"></div>

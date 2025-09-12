@@ -1,5 +1,6 @@
 class Memory {
 	constructor(parameters) {
+		
 		this.message = parameters['message'];
 		
 		this.solutionZone = {};
@@ -41,6 +42,7 @@ class Memory {
 			i++;
 		}
 		this.spreadMessage = cutMessage(this.message, this.numberOfCards);
+		this.instructions = 'Retournez ' + this.duplicates + ' cartes identiques pour faire apparaître le message caché';
 		//console.log(this.spreadMessage);
 	}
 	
@@ -51,19 +53,16 @@ class Memory {
 		//let randomValues = this.cardValues;
 		let randomValues = mixArray(this.cardValues);
 		
-		const displayZone = document.createElement('div');
-		displayZone.setAttribute('id', 'memory');
-		displayZone.setAttribute('class', this.difficulty);
+		const cardsZone = document.createElement('div');
+		cardsZone.setAttribute('id', 'memory');
+		cardsZone.setAttribute('class', this.difficulty);
 		
 		this.solutionZone = document.createElement('div');
 		this.solutionZone.setAttribute('id', 'solution-zone');
 		
-		demoZone.appendChild(displayZone);
-		demoZone.appendChild(this.solutionZone);
+		gameZone.appendChild(cardsZone);
+		gameZone.appendChild(this.solutionZone);
 		
-
-		
-		//let currentTurnedCard = 0;
 		let turnedCardValue;
 		let cards = document.getElementsByClassName('memoryCard');
 		
@@ -73,19 +72,21 @@ class Memory {
 			}
 			let j = randomValues[i];
 			this.memoryCards[i]['cardValue'] = j;
+			//
+			this.memoryCards[i]['container'] = document.createElement('div');
+			this.memoryCards[i]['container'].setAttribute('class', 'card-container');
+			cardsZone.appendChild(this.memoryCards[i]['container']);
+			//
 			this.memoryCards[i]['htmlElement'] = document.createElement('input');
-			
-
 			this.memoryCards[i]['htmlElement'].setAttribute('type', 'image');
-			this.memoryCards[i]['htmlElement'].setAttribute('src', imagesFolderPath + 'question-mark.png');
+			this.memoryCards[i]['htmlElement'].setAttribute('src', '../../images/question-mark.png');
 			this.memoryCards[i]['htmlElement'].setAttribute('class', 'memory-card-back');
-			this.memoryCards[i]['hiddenImgSrc'] = imagesFolderPath + this.graphicTheme + '/' + this.graphicTheme +' ('+ j + ').png';
+			this.memoryCards[i]['hiddenImgSrc'] = '../../images/' + this.graphicTheme + '/' + this.graphicTheme +' ('+ j + ').png';
 			this.memoryCards[i]['htmlElement'].setAttribute('value', '?');
 
-			displayZone.appendChild(this.memoryCards[i]['htmlElement']);
-
-			
-			console.log(this.memoryCards[i]['hiddenImgSrc']);
+			//cardsZone.appendChild(this.memoryCards[i]['htmlElement']);
+			this.memoryCards[i]['container'].appendChild(this.memoryCards[i]['htmlElement']);			
+			//console.log(this.memoryCards[i]['hiddenImgSrc']);
 			this.memoryCards[i]['htmlElement'].addEventListener("click", () => {this.#controlTurnedCards(i)});
 		}
 	}
@@ -125,12 +126,12 @@ class Memory {
 				setTimeout(function() {
 					
 					card['htmlElement'].setAttribute('value', '?');
-					card['htmlElement'].setAttribute('src', imagesFolderPath + 'question-mark.png');
+					card['htmlElement'].setAttribute('src', '../../images/question-mark.png');
 
 					for (let turnedCard of turnedCards) {
 
 						turnedCard.setAttribute('class', 'memory-card-back');
-						turnedCard.setAttribute('src', imagesFolderPath + 'question-mark.png');
+						turnedCard.setAttribute('src', '../../images/question-mark.png');
 						turnedCard.setAttribute('value', '?');
 					}
 				}, 750);

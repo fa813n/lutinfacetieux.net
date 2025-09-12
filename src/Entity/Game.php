@@ -13,6 +13,7 @@ class Game { //extends Entity
   private ?int $receiver;
 
   const INDEX_CONTENT = ["include" => "menu"];
+  /*
   const SCRIPTS = [
     "data",
     "encodeMessage",
@@ -21,6 +22,16 @@ class Game { //extends Entity
     "games/LettersToSymbols",
     "games/Memory",
     "games/ScrollImages",
+  ];
+  */
+  
+  const MAIN_SCRIPTS = ['data', 'encodeMessage', 'main', 'Symbol'];
+  const GAME_SCRIPTS = [
+    'flags' => 'games/Flags',
+    'letters-to-symbols' => 'games/LettersToSymbols',
+    'memory' => 'games/Memory',
+    'scroll-images' => 'games/ScrollImages',
+    'dobble' => 'games/Dobble',
   ];
 
   /*
@@ -52,17 +63,6 @@ class Game { //extends Entity
     return $this;
   }
 
-  /*
-  public function getChosenGame(): string
-  {
-    return $this->chosenGame;
-  }
-  public function setChosenGame(string $chosengame): self
-  {
-    $this->chosenGame = $chosenGame;
-    return $this;
-  }
-  */
 
   public function getContent(): string {
     return $this->content;
@@ -87,22 +87,4 @@ class Game { //extends Entity
     $this->receiver = $receiver;
     return $this;
   }
-  /*
-  public function getGrid():int {
-    return $this->grid;
-  }
-  public function setGrid(int $grid):self {
-    $this->grid = $grid;
-    return $this;
-  }
-  
-  public function getCell():int {
-    return $this->cell;
-  }
-  public function setCell(int $cell):self {
-    $this->cell = $cell;
-    return $this;
-  }
-  */
-  
 }

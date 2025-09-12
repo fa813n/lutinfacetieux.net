@@ -1,11 +1,12 @@
 class LettersToSymbols 
 {
 	constructor(parameters) {
+		this.instructions = 'Déchiffrez le message codé ci dessous! chaque dessin représente une lettre';
 		this.message = parameters['message'].toLowerCase();
 		this.graphicTheme = parameters['graphic-theme'];
 	}
 	
-	
+	//const instructions = 'Déchiffrez le message codé ci dessous! chaque dessin représente une lettre';
 	
 	createGame() {
 		
@@ -20,8 +21,12 @@ class LettersToSymbols
 		
 		const mixedValues = mixArray(arrayOfValues);
 		mixedValues.forEach(setImagePath);
+		
 		function setImagePath(value) {
-			imagePaths.push('<img src="' + imagesFolderPath + graphicTheme + '/' + graphicTheme +' ('+ value + ').png">');
+			const symbol = new Symbol(value, graphicTheme)
+			const imagePath = symbol.imagePath();
+			imagePaths.push('<img src="' + imagePath + '">');
+			//imagePaths.push('<img src="./data/images/' + graphicTheme + '/' + graphicTheme +' ('+ value + ').png">');
 		}
 
 		const encodedAlphabet = associate(alphabet, imagePaths);
@@ -29,6 +34,6 @@ class LettersToSymbols
 		const messageObject = new EncodeMessage(this.message, encodedAlphabet);
 		const encodedMessage = messageObject.encode();
 
-		const displaySymbols = messageObject.displaySymbols(encodedMessage, demoZone, 'letters-to-symbol');
+		const displaySymbols = messageObject.displaySymbols(encodedMessage, gameZone, 'letters-to-symbol');
 	}
 }

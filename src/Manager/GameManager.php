@@ -46,5 +46,8 @@ class GameManager extends AbstractManager {
     }
     return $privateList;
   }
+  public function countGames(int $owner):int {
+    return count($this->findBy(['owner' => $owner]));
+  }
   
 }

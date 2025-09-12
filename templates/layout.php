@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title><?= $title ?></title>
   <link rel="stylesheet" href="<?= ROOT_URL ?>/public/css/workshop.css">
+  <link rel="stylesheet" href="<?= ROOT_URL ?>/public/css/games.css">
   <?php 
   
   if (isset($scripts) && !empty($scripts)) {
@@ -18,19 +19,18 @@
   
 </head>
 <body>
+  <main>
   
   <?= $content ?>
+ <!-- 
   <h3>
     <?php
+    echo 'Session<br>';
     var_dump($_SESSION);
-    /*
-  if (isset($scripts) && !empty($scripts)) {
-    foreach ($scripts as $script) {
-      echo('<script src="'.ROOT_URL.'/public/scripts/'.$script.'.js"></script>');
-    }
-  }
-  */
   ?>
   </h3>
+  -->
+  
+  </main>
 </body>
 </html> 

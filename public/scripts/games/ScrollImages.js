@@ -1,5 +1,6 @@
 class ScrollImages {
 	constructor (parameters) {
+		this.instructions = 'Déchiffrez le message codé ci dessous!';
 		this.message = parameters['message'];
 		this.graphicTheme = parameters['graphic-theme'];
 		this.difficulty = parameters['difficulty'];
@@ -11,14 +12,21 @@ class ScrollImages {
 		
 		if (letter === ' ') {
 			letterDivContent = '<span class="scroll-image"></span>';
+			/*
+			letterDivContent = document.createElement('span');
+			letterDivContent.setAttribute('class', 'scroll-image');
+			*/
 		}
 		else {
 			let i = Math.floor(Math.random()*nbChanges);
 			if (i === 1) {
-				letterDivContent = '<span class="scroll-images" style="font-size:48px">' + letter.toUpperCase() + '</span>';
+				letterDivContent = '<span class="scroll-images">' + letter.toUpperCase() + '</span>';
 			}
 			else {
-				letterDivContent = '<img src ="' + imagesFolderPath + graphicTheme + '/' + graphicTheme + ' ('+ ((Math.floor(Math.random()*31)) + 1) + ').png" class="scroll-image-sample">';
+				const j = Math.floor(Math.random()*31) + 1;
+				const symbol = new Symbol (j, graphicTheme);
+				letterDivContent = '<img src="' + symbol.imagePath() + '" class="scroll-image-sample">';
+				
 			}
 		}
 		let letterDiv = document.getElementById(divId);
@@ -41,7 +49,7 @@ class ScrollImages {
 
 		const gameContainer = document.createElement('div');
 		gameContainer.setAttribute('id', 'game-container');
-		demoZone.appendChild(gameContainer);
+		gameZone.appendChild(gameContainer);
 		gameContainer.innerHtmlm = '';
 		
 		let speed;
@@ -79,6 +87,5 @@ class ScrollImages {
 
 
 		}
-	}	
-	
+	}
 }

@@ -10,9 +10,17 @@ use Toolbox\Autoloader;
 use Toolbox\Router\Router;
 
 //echo(ROOT.'/../lib/Autoloader.php');
+if (isset($_POST['lutin']) && $_POST['lutin'] === 'facetieux') {
+  $_SESSION['lutin'] = 'yes';
+}
+if ($_SESSION['lutin'] === 'yes') {
 require_once(ROOT.'/lib/Autoloader.php');
 
 Autoloader::register();
 
 $router = new Router();
 $router->start();
+}
+else {
+  echo '<form method="post" action="#"><input type="text" name="lutin"><input type="submit"></form>';
+}
