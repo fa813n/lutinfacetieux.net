@@ -11,10 +11,8 @@ if (isset($publicGames) && !empty($publicGames)):
 endif;
 if (isset($privateGames) && !empty($privateGames)): ?><ul>Mes Énigmes
 <?php foreach ($privateGames as $game):
-  var_dump($game); ?>
-  <li><a href="<?= ROOT_URL ?>/game/displayGame/<?= $game[
-  'id'
-] ?>">jeu <?= $game['id'] ?></a></li>
+  //var_dump($game); ?>
+  <li><a href="<?= ROOT_URL ?>/game/displayGame/<?= $game['id'] ?>">jeu <?= $game['id'] ?></a></li>
 <?php
 endforeach; ?>
 </ul>

@@ -45,10 +45,9 @@ class UserController extends AbstractController {
          ->setPassword($newUser['password'])
          ->setToken($token)
          ->setActive(0);
-    //AccountController::sendActivationMail($user);
     $userManager->createUser($user);
     $userId = $userManager->getNewId();
-    AccountController::sendActivationLink($userId, $token, $newUser['login'], 'displayLink');
+    //AccountController::sendActivationLink($userId, $token, $newUser['login'], 'displayLink');
     return $userId;
     //header('location: '.ROOT_URL.'/account/activate/'.$userId);
   }
@@ -83,6 +82,9 @@ class UserController extends AbstractController {
       }
       else {
         $newUserId = $this->createUser($newUser);
+        $token = AccountController::generateToken();
+        $userManager->update(['token' => $token], $newUserId);
+        AccountController::sendActivationLink($newUserId, $token, $newUser['login'], 'displayLink');
         $this->render('user', ['userForm' => 'send-activation-link',
                                 'id' => $newUserId, 
                                 'message' => 'un lien vous a été envoyé par e-mail pour activer votre compte, si vous ne l\'avez pas reçu, cliquez ici pour le renvoyer']);
@@ -92,7 +94,7 @@ class UserController extends AbstractController {
       
   }
   
-  public function sendActivationLink() {
+  public function sendActivationLink() { //activateAccount 
     $id = 0;
     if (isset($_SESSION['user'])) {
       $id = (int)$_SESSION['user']['id'];
@@ -116,7 +118,6 @@ class UserController extends AbstractController {
       if ($selectedUser) {
         $token = AccountController::generateToken();
         $userManager->update(['token' => $token], $id);
-        echo $selectedUser['login'];
         AccountController::sendActivationLink($id, $token, $selectedUser['login'], $sendMethod);
         $this->flashMessage('un message contenant un lien vient de vous être envoyé, si vous ne l\'avez pas reçu, cliquez ici pour le renvoyer', 'info');
         $this->render('user', ['userForm' => 'send-activation-link',
@@ -186,7 +187,9 @@ class UserController extends AbstractController {
     }
     
   }
-  
+  public function findOneByLogin($login) {
+    return (new UserManager)->findOneByLogin($login);
+  }
   public function successMessage(string $message) {
     $detail = User::MESSAGES[$message];
     $this->render('user', ['message' => $detail]);

@@ -4,7 +4,7 @@ namespace Workshop\Controller;
 use Toolbox\Controller\AbstractController;
 use Workshop\Manager\GameManager;
 use Workshop\Entity\Game;
-//use Workshop\UserController;
+use Workshop\Controller\UserController;
 // use Workshop\Traits\UserRights;
 
 use Toolbox\Utils;
@@ -66,10 +66,22 @@ class GameController extends AbstractController {
     } elseif (isset($_SESSION['game'][$id]) && !empty($_SESSION['game'][$id])) {
       $gameParams = $_SESSION['game'][$id];
     }
-
+    /*
+    var_dump($gameParams);
+    echo '<br>Session<br>';
+    var_dump($_SESSION);
+    */
+    
+    if ((int)$gameParams['id'] === 0 && $_SESSION['user']['id']) {
+      //echo 'verified';
+      $gameParams['owner'] = $_SESSION['user']['id'];
+     // echo '<br>$gameParams<br>';
+      //var_dump($gameParams);
+    }
     $gameAttributes['userRights'] = $userRights;
     $gameAttributes['id'] = (int) Utils::array_extract($gameParams, 'id');
     $gameAttributes['owner'] = (int) Utils::array_extract($gameParams, 'owner');
+    $gameAttributes['receiverLogin'] = Utils::array_extract($gameParams, 'receiver-login');
     $gameAttributes['receiver'] = (int) Utils::array_extract(
       $gameParams,
       'receiver'
@@ -176,11 +188,27 @@ class GameController extends AbstractController {
       }
       if ($gameAttributes['userRights'] === 'owner') {
         $game = new Game();
-        $receiver =
+        $receiver = 0;
+        
+        if (isset($gameAttributes['receiverLogin']) && !empty($gameAttributes['receiverLogin'])) {
+          $receiverLogin = $gameAttributes['receiverLogin'];
+          $userController = new UserController;
+          $user = $userController->findOneByLogin($receiverLogin);
+          if ($user) {
+            $receiver = $user['id'];
+          }
+          else {
+            $receiver = $userController->createUser(['login' => $receiverLogin, 'name' => '', 'password' => '']);
+          }
+        }
+        else {
+          $receiver =
           $gameAttributes['receiver'] === 0
             ? $_SESSION['user']['id']
             : $gameAttributes['receiver'];
             $owner = $_SESSION['user']['id'];
+        }
+        $owner = $gameAttributes['owner'];
         $game
           ->setGrid(0)
           ->setCell(0)

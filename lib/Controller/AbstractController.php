@@ -34,13 +34,27 @@ abstract class AbstractController {
     
     extract($data);
     
-    ob_start('Toolbox\Renderer\Renderer::createList');
+    //ob_start('Toolbox\Renderer\Renderer::createList');
+    ob_start();
     require_once(ROOT.'/templates/'.$template.'.php');
-    //$content = ob_get_clean();
+    $content = ob_get_clean();
+    $content = Renderer::render($content);
+    /*
+    $pattern = '/\{\{li\}\}(\w+)\{\{\/li\}\}/i';
+    $replacement = '\<li\>$1\<\/li\>';
+    $content = preg_replace($pattern, $replacement, $content);
+    */
+    //$content = str_replace('tentative', 'victoire', $content);
+    //$content = preg_replace('/une/', 'la', $content);
+   
+    /*
     $content = ob_get_contents();
     ob_clean();
+    */
     
     require_once(ROOT.'/templates/layout.php');
+     echo '<h2>buffer</h2>';
+    var_dump($content);
   }
   /**
    * génère une vue en fonction du nom de la rubrique
