@@ -186,7 +186,15 @@ function displayGame(parameters) {
 	game.createGame();
 	
 }
-
-
-
-
+/*
+//Il doit y avoir plus élégant...
+console.log('test')
+let selectedGame = document.getElementById('chosen-game').getElementsByTagName('option');
+for (let i = 0; i < selectedGame.length; i++) {
+  console.log(selectedGame[i].value;
+			  console.log('test');
+	if (selectedGame[i].selected === true) {
+		displayAdditionalForm();
+	}
+}
+*/

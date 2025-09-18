@@ -14,7 +14,7 @@
                         name="title"
                         id="title"
                         placeholder="donnez un nom à l'énigme (facultatif)"
-                        value="<?= $title ?? '' ?>"
+                        value="<?= $content['title'] ?? '' ?>"
                     />
                 </p>
                 <p>
@@ -24,26 +24,26 @@
                         placeholder="Le message à coder"
                         name="message"
                         id="message"
-                        value="<?= $message ?>"
+                        value="<?= $content['message'] ?? ''?>"
                     />
                 </p>
                 <p>
-                    <label for="game">choisissez le jeu</label>
+                    <label for="chosen-game">choisissez le jeu</label>
                     <select
                         id="chosen-game"
                         name="chosen-game"
                         onchange="displayAdditionalForm()"
                     >
                         <option value=""></option>
-                        <option value="letters-to-symbols">
+                        <option value="letters-to-symbols" <?= isSelected($content, 'chosen-game', 'letters-to-symbols') ?>>
                             substitution de lettres
                         </option>
-                        <option value="flags">Drapeaux</option>
-                        <option value="scroll-images">
+                        <option value="flags" <?= isSelected($content, 'chosen-game', 'flags') ?>>Drapeaux</option>
+                        <option value="scroll-images"  <?= isSelected($content, 'chosen-game', 'scroll-images') ?>>
                             Images alternantes
                         </option>
-                        <option value="memory">Memory</option>
-                        <option value="dobble">Dobble</option>
+                        <option value="memory" <?= isSelected($content, 'chosen-game', 'memory') ?>>Memory</option>
+                        <option value="dobble" <?= isSelected($content, 'chosen-game', 'dobble') ?>>Dobble</option>
                     </select>
                 </p>
             </fieldset>
@@ -57,23 +57,26 @@
                         type="radio"
                         id="easy"
                         name="difficulty"
-                        value="easy"
+                        value="easy" 
+						<?= isChecked($content, 'difficulty', 'easy') ?>
                     />
-                    <label for="html">easy</label><br />
+                    <label for="html">facile</label><br />
                     <input
                         type="radio"
                         id="medium"
                         name="difficulty"
                         value="medium"
+						<?= isChecked($content, 'difficulty', 'medium') ?>
                     />
-                    <label for="medium">medium</label><br />
+                    <label for="medium">moyen</label><br />
                     <input
                         type="radio"
                         id="hard"
                         name="difficulty"
                         value="hard"
+						<?= isChecked($content, 'difficulty', 'hard') ?>
                     />
-                    <label for="hard">hard</label>
+                    <label for="hard">difficile</label>
                 </fieldset>
             </template>
 
@@ -86,6 +89,7 @@
                         id="christmas"
                         name="graphic-theme"
                         value="christmas"
+						<?= isChecked($content, 'graphic-theme', 'christmas') ?>
                     />
                     <label for="christmas">Noël</label><br />
                     <input
@@ -93,6 +97,7 @@
                         id="halloween"
                         name="graphic-theme"
                         value="halloween"
+						<?= isChecked($content, 'graphic-theme', 'halloween') ?>
                     />
                     <label for="halloween">Halloween</label><br />
                     <input
@@ -100,6 +105,7 @@
                         id="music"
                         name="graphic-theme"
                         value="music"
+						<?= isChecked($content, 'graphic-theme', 'music') ?>
                     />
                     <label for="music">Musique</label><br />
                 </fieldset>
@@ -111,20 +117,25 @@
             <button type="button" onclick="displayPreview()">
                 Prévisualisation
             </button>
-            <!--<input type="hidden" name="id" value="<?= $id ?>">-->
-            <h2><?= $id ?></h2>
             <input type="hidden" name="id" value="<?= $id ?>" />
             <input type="hidden" name="owner" value="<?= $owner ?>" />
             <input type="hidden" name="receiver" value="<?= $receiver ?>" />
             <input type="hidden" name="grid" value="<?= $grid ?>" />
             <input type="hidden" name="cell" value="<?= $cell ?>" />
-            <input type="submit" value="Valider" />
-        </form>
-    </section>
+		    <input type="submit" value="Valider" />
+		  
+        
 
     <section id="preview">
         <h2>Le résultat ici:</h2>
         <div id="instructions"></div>
         <div id="game-zone"></div>
     </section>
+		  </form>
+    </section>
+
 </main>
+<script>window.onload = function() {
+  displayAdditionalForm();
+};
+</script>

@@ -4,6 +4,7 @@ const answerZone = document.getElementById('answer');
 const instructionsZone = document.getElementById('instructions');
 const gameZone = document.getElementById('game-zone');
 //const solutionZone= document.getElementById('solution-zone');
+const imageFolder = '../../images/';
 
 let urlParams =  new URLSearchParams(document.location.search);
 let cellNumber = urlParams.get("cellNumber");

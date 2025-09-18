@@ -34,6 +34,8 @@ class Dobble {
 			break;
 		}
 		
+		this.answerManager = new AnswerManager(this.message, this.numberOfMessageParts);
+		
 		this.playerCardValues = []; // la liste des valeurs de la carte du joueur
 		this.gameCardValues = []; // la liste des valeurs de la carte à comparer
 		
@@ -46,13 +48,13 @@ class Dobble {
 		this.displayZone.setAttribute('id', 'dobble');
 		gameZone.appendChild(this.displayZone);
 		
+		this.playerZone = document.createElement('div');
+		this.playerZone.setAttribute('id', 'player');
+		this.displayZone.insertBefore(this.playerZone, this.gameMasterZone);
+		
 		this.gameMasterZone = document.createElement('div');
 		this.gameMasterZone.setAttribute('id', 'game-master');
 		this.displayZone.appendChild(this.gameMasterZone);
-		
-		this.playerZone = document.createElement('div');
-		this.playerZone.setAttribute('id', 'player');
-		this.displayZone.appendChild(this.playerZone);
 	}
 	
 	/*
@@ -84,12 +86,7 @@ class Dobble {
 	}
 
 	#drawNewCard(victory) {
-
-		//clearTimeout(this.restartGameTimeOut);
-		//clearTimeout(this.fadeOutTimeOut);
-		
 		if (victory && this.difficulty === 'easy') {
-			console.log('easy victory');
 			this.#resetArrayOfSymbols();
 			this.playerCardValues = [];
 			// la pioche remplace la carte joueur
@@ -102,9 +99,8 @@ class Dobble {
 			this.#createGameCard();
 		}
 		else if ((!victory && this.difficulty === 'easy') || (!victory &&  this.difficulty === 'medium')) {
-			console.log('easy or medium loss');
+			
 			//on ne change que la pioche; il faut retransférer les éléments dans la liste des valeurs possibles, sinon arrayOfSymbols se vide à chaque tour
-
 			this.#resetArrayOfSymbols();
 			for (let value of this.playerCardValues) {
 				let sourceIndex = this.arrayOfSymbols.indexOf(value);
@@ -114,7 +110,6 @@ class Dobble {
 			this.#createGameCard();
 		}
 		else {
-			console.log('anything else');
 			this.playerCardValues = [];
 			this.gameCardValues = [];
 		
@@ -123,11 +118,6 @@ class Dobble {
 			this.#displayPlayerCard();
 			this.#createGameCard();
 		}
-		console.log(this.arrayOfSymbols);
-		console.log(this.playerCardValues);
-		console.log(this.gameCardValues);
-		//this.restartGameTimeOut = setTimeout(this.#drawNewCard.bind(this), this.displayTime, false); //changement automatique de carte après un temps
-		//this.fadeOutTimeOut = setTimeout(this.#setClassFadeOut.bind(this), this.displayTime - 1000);
 	}
 	
 	// réinitialise la liste des valeurs possibles
@@ -200,9 +190,6 @@ class Dobble {
 		
 		//ajout d'une classe aléatoire pour faire varier les tailles
 		const gameCards = document.getElementsByClassName('game-master-card');
-		//const gameCardElements = document.getElementById('game-master').getElementsByTagName('input');
-		console.log(gameCards);
-		//console.log(gameCardElements)
 		
 		for (let i = 0; i < gameCards.length; i++) {
 			
@@ -220,11 +207,10 @@ class Dobble {
 	#setClassFadeOut() {
 		
 		const gameCardElements = document.getElementById('game-master').getElementsByTagName('input');
+		
 		for (let i = 0; i < gameCardElements.length; i++){
 			gameCardElements[i].classList.add('fade-out');
 		}
-		
-		console.log('time');
 	}
 	
 	// transfère un élément aléatoire d'un array vers un autre, utilise randomIndex et transferElement
@@ -244,18 +230,25 @@ class Dobble {
 			values.push(gameCardElements[i].value);
 		}
 		if (values.includes(symbolNumber)){
-			// Victoire
-			console.log('gagné');
-			transferElement(this.spreadMessage, 0, this.solutionParts);
-			this.solutionParts.forEach((solutionPart) => {this.solutionZone.innerHTML += solutionPart});
 			victory = true;
+			const answerStep = this.answerManager.addAnswerPart();
+			this.solutionZone.innerHTML = answerStep.revealedString;
+			if (answerStep.finished === true) {
+				this.#displayVictoryMessage();
+				
+			}
 		}
 		else {
 			victory = false;
-			// Echec
-			console.log('perdu');
+			const answerStep = this.answerManager.removeAnswerPart();
+			this.solutionZone.innerHTML = answerStep.revealedString;
 		}
-		
 		this.#drawNewCard(victory);	
-	}	
+	}
+	#displayVictoryMessage() {
+		clearTimeout(this.restartGameTimeOut);
+		clearTimeout(this.fadeOutTimeOut);
+		document.getElementById('dobble').innerHTML = '<h1>Félicitations! tu as Gagné</h1>';
+		
+	}
 }

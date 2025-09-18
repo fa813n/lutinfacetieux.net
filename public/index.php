@@ -3,7 +3,7 @@ session_start();
 error_reporting(E_ALL);
 // constante ROOT contenant le dossier raçine
 define('ROOT',dirname(__DIR__));
-define('ROOT_URL', 'http://localhost:8080/lutinfacetieux');
+define('ROOT_URL', 'http://localhost:8080/dev/lutinfacetieux');
 
 //define('ROOT', 'http://localhost:8080/lutinfacetieux');
 use Toolbox\Autoloader;

@@ -24,7 +24,7 @@ class ScrollImages {
 			}
 			else {
 				const j = Math.floor(Math.random()*31) + 1;
-				const symbol = new Symbol (j, graphicTheme);
+				const symbol = new Symbol(j, graphicTheme);
 				letterDivContent = '<img src="' + symbol.imagePath() + '" class="scroll-image-sample">';
 				
 			}
@@ -87,5 +87,6 @@ class ScrollImages {
 
 
 		}
-	}
+	}	
+	
 }

@@ -3,6 +3,8 @@ namespace Toolbox\Controller;
 
 use Toolbox\ErrorDisplay;
 use Toolbox\FlashMessage;
+use Toolbox\Renderer\RenderForm;
+use Toolbox\Renderer\Renderer;
 use Workshop\Traits\UserRights;
 
 abstract class AbstractController {
@@ -11,6 +13,10 @@ abstract class AbstractController {
     $classNameParts = explode('\\', get_class($this));
     $entityName = str_replace('Controller','',(end($classNameParts)));
     return(lcfirst($entityName));
+  }
+  
+  static function createList($buffer) {
+    return str_replace('{{li}}', '<li>', $buffer);
   }
   /**
    * @param $file fichier contenant le html specifique à la page demandée
@@ -24,12 +30,15 @@ abstract class AbstractController {
     $data['errorClass'] = ErrorDisplay::displayErrorMessage()['class'];
     */
     $data['flashMessage'] = FlashMessage::displayMessage();
+    $data['testArray'] = ['one' => 'un', 'two' => 'deux', 'three' => 'trois'];
     
     extract($data);
     
-    ob_start();
+    ob_start('Toolbox\Renderer\Renderer::createList');
     require_once(ROOT.'/templates/'.$template.'.php');
-    $content = ob_get_clean();
+    //$content = ob_get_clean();
+    $content = ob_get_contents();
+    ob_clean();
     
     require_once(ROOT.'/templates/layout.php');
   }

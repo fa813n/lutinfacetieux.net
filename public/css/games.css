@@ -1,5 +1,15 @@
+#game-zone {
+	padding: 1em;
+}
+
 #solution-zone {
+	position: sticky;
+	bottom: 3%;
+	width: 70vw;
+	margin: auto;
+	background-color: black;
 	border: 2px solid green;
+	border-radius: 0.7em;
 	color: green;
 	font-size: 2rem;
 	height: 3rem;
@@ -68,51 +78,62 @@ Dobble
 	position: relative;
 	height: 95svh;
 	width: 95svw;
-	border: 2px solid green;
 	--game-card-width: min(50vw, 85vh);
+	
 	#game-master {
-		/*width: var(--game-card-width);*/
+		width: var(--game-card-width);
 		/*height: calc(1.5*(var(--game-card-width)));*/
 		border: 2px solid;
 		border-radius: 2em;
 		margin: 2em auto;
+		padding: 1em;
+		&:has(.fade-out) {
+			transition: opacity 0.9s;
+			opacity: 0;
+			@starting-style {
+				opacity: 1;
+			}
+		}
 	}
+	
 	#player {
-		position: absolute;
-		bottom: 0;
+		/*position: absolute;
+		bottom: 0;*/
 		width: fit-content;
 		border: 2px solid;
 		margin: auto;
+		padding: 1em;
 	}
 	.player-card {
-		width: 4rem;
+		width: 8vw;
 	}
 	.size-0 {
-		width: 3em;
+		width: 5vw;
 	}
 	.size-1 {
-		width: 5em;
+		width: 8vw;
 	}
 	.size-2 {
-		width: 7em;
+		width: 11vw;
 	}
 	.size-3 {
-		width: 9em;
+		width: 13vw;
 	}
 	.size-4 {
-		width: 12em;
+		width: 16vw;
 	}
 	.size-5 {
-		width: 15em;
+		width: 20vw;
 	}
+	/*
 	.fade-out {
-		/*animation: fade-out 0.9s ease-out forwards;*/
 		transition: opacity 0.9s;
 		opacity: 0;
 		@starting-style {
 			opacity: 1;
 		}
 	}
+	*/
 	.fade-in {
 		animation: fade-in 0.9s ease-out forwards;
 	}

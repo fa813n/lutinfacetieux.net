@@ -1,5 +1,11 @@
 <h1>Voici le jeu</h1>
+<script>window.onload = function() {
+  displayGame(<?= $parameters ?>);
+};
+</script>
+<!--
 <script>displayGame(<?= $parameters ?>)</script>
-<button onclick='displayGame(<?= $parameters ?>)'>Game</button>
+-->
+<button onclick='displayGame(<?= $parameters ?>)'>Recharger</button>
 <div id="instructions"></div>
 <div id="game-zone"></div>

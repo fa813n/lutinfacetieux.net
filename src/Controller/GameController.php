@@ -27,6 +27,7 @@ class GameController extends AbstractController {
       'receiver' => $userId,
       'grid' => 0,
       'cell' => 0,
+	   'content' => []
     ]);
   }
 
@@ -94,7 +95,7 @@ class GameController extends AbstractController {
 
     $scripts[] = $gameScript;
     $parameters = $gameAttributes['content'];
-    var_dump($gameAttributes);
+    //var_dump($gameAttributes);
     $this->render('display-game', [
       'id' => $id,
       'scripts' => $scripts,
@@ -106,8 +107,9 @@ class GameController extends AbstractController {
     $gameAttributes = $this->getGame($id);
     // extrzits les attributs de'content'
     $content = json_decode(Utils::array_extract($gameAttributes, 'content'), 1);
-    $gameAttributes = array_merge($gameAttributes, $content);
-    var_dump($gameAttributes);
+	//$gameAttributes = array_merge($gameAttributes, $content);
+	$gameAttributes['content'] = $content;
+	//var_dump($gameAttributes);
     if ($gameAttributes['userRights'] === 'owner') {
       $gameAttributes['scripts'] = array_merge(Game::MAIN_SCRIPTS, Game::GAME_SCRIPTS);
       $this->render('edit-game', $gameAttributes);

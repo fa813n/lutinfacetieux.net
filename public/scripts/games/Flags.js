@@ -16,7 +16,7 @@ class Flags {
 		for (let i in this.flagList) {
 			flagImagePaths[i] = [];
 			for (let j in this.flagList[i]) {
-				let imagePath = '<img src="./data/images/flags/' + this.flagList[i][j] + '.png">';
+				let imagePath = '<img src="' + imageFolder + 'flags/' + this.flagList[i][j] + '.png">';
 				flagImagePaths[i].push(imagePath);
 			}
 		}

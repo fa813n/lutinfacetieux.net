@@ -1,7 +1,7 @@
 class EncodeMessage {
 	constructor(message, code) {
 		this.message = message;
-		this.code = code; //code sous forme de Map associatif lettre => symbole / liste
+		this.code = code;
 	}
 	//crée une liste de symboles à partir d'un message
 	encode() {
