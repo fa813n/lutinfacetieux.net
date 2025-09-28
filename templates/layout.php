@@ -29,14 +29,14 @@ Un-Minified version
   <main>
   
   <?= $content ?>
- <!-- 
-  <h3>
+ 
+  
     <?php
-    echo 'Session<br>';
+    echo '<section style="border: 1px solid gold"> Session<br>';
     var_dump($_SESSION);
+    echo '<button onclick="sessionStorage.clean()">unset</button></section>';
   ?>
-  </h3>
-  -->
+  
   
   </main>
 </body>

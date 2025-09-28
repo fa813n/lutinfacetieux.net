@@ -7,7 +7,7 @@ class Renderer {
     return self::createList($buffer);
   }
 
-  static function createList($string) {
+  static function createList(?string $string = '') {
     $pattern = '/tentative/';
     $replacement = 'super victoire';
     return preg_replace($pattern, $replacement, $string);

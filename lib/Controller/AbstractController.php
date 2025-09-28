@@ -53,8 +53,10 @@ abstract class AbstractController {
     */
     
     require_once(ROOT.'/templates/layout.php');
+    /*
      echo '<h2>buffer</h2>';
     var_dump($content);
+    */
   }
   /**
    * génère une vue en fonction du nom de la rubrique
@@ -96,5 +98,4 @@ abstract class AbstractController {
   public function flashMessage(string $message, string $type = 'info'){
     $_SESSION['flashMessage'] = ['message' => $message, 'type' => $type];
   }
-  
 }

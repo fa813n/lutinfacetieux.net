@@ -77,31 +77,17 @@
 
     <fieldset class="grid-form_receiver">
         <label for="receiver">Destinataire du jeu</label>
-        <!--
-        <div>
-            <input type="radio" name="receiver" value="self" id="self" />
-            <label for="self">Moi-même</label>
-        </div>
 
-        <div>
-            <input type="radio" name="receiver" value="public" id="public" />
-            <label for="public">Tout le monde</label>
-        </div>
-
-        <div>
-            <input type="radio" name="receiver" value="e-mail" id="e-mail" />
-            <label for="email">Un(e) amie, je renseigne son e-mail</label>
-            -->
         <input 
-          type="text" 
-          <!-- type="email" -->
+          type="email"
           name="receiver" 
           value="<?= $receiver ?? '' ?>"
         />
-        <!--</div>-->
     </fieldset>
-    <input type="hidden" name="id" value="<?= $id ?>" />
+    <!--<input type="hidden" name="grid" value="<?= $grid ?: 0 ?>" />-->
+    <input type="hidden" name="id" value="<?= $id ?: 0 ?>" />
+    <!--
     <button type="button" onclick="displayPreview()">Prévisualisation</button>
-    <!--<input type="hidden" name="id" value="<?= $id ?>">-->
+    -->
     <input type="submit" value="Valider" />
 </form>

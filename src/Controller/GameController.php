@@ -5,6 +5,7 @@ use Toolbox\Controller\AbstractController;
 use Workshop\Manager\GameManager;
 use Workshop\Entity\Game;
 use Workshop\Controller\UserController;
+use Workshop\Controller\AccountController;
 // use Workshop\Traits\UserRights;
 
 use Toolbox\Utils;
@@ -40,6 +41,7 @@ class GameController extends AbstractController {
     if ($id === 0) {
       $userRights = 'owner';
     } else {
+      echo '<h2>bdd</h2>';
       $gameManager = new GameManager();
       $gameParams = $gameManager->findById($id);
       if ($gameParams) {
@@ -59,11 +61,13 @@ class GameController extends AbstractController {
     }
     //S'il y a un post utilisateur ou que le jeu est déjà chargé en session, on écrase les attributs chargés lors de l'appel à la bdd
     if (isset($_POST) && !empty($_POST) && $id === (int) $_POST['id']) {
+      echo '<h2>post</h2>';
       foreach ($_POST as $key => $value) {
         $gameParams[$key] = htmlspecialchars(stripslashes(trim($value)));
         $_SESSION['game'][$id][$key] = $value;
       }
     } elseif (isset($_SESSION['game'][$id]) && !empty($_SESSION['game'][$id])) {
+      echo '<h>session</h2>';
       $gameParams = $_SESSION['game'][$id];
     }
     /*
@@ -78,8 +82,11 @@ class GameController extends AbstractController {
      // echo '<br>$gameParams<br>';
       //var_dump($gameParams);
     }
+    echo '<br>$gameParams<br>';
+    var_dump($gameParams);
     $gameAttributes['userRights'] = $userRights;
     $gameAttributes['id'] = (int) Utils::array_extract($gameParams, 'id');
+    $gameAttributes['title'] = Utils::array_extract($gameParams, 'title');
     $gameAttributes['owner'] = (int) Utils::array_extract($gameParams, 'owner');
     $gameAttributes['receiverLogin'] = Utils::array_extract($gameParams, 'receiver-login');
     $gameAttributes['receiver'] = (int) Utils::array_extract(
@@ -90,19 +97,28 @@ class GameController extends AbstractController {
     $gameAttributes['grid'] = (int) Utils::array_extract($gameParams, 'grid');
     $gameAttributes['cell'] = (int) Utils::array_extract($gameParams, 'cell');
     //on r#groupe les attributs restznt dans cont#nt
+    $gameAttributes['content'] = Utils::array_extract($gameParams, 'content');
 
-    $gameAttributes['content'] =
+    /*$gameAttributes['content'] =
       isset($gameParams['content']) && !empty($gameParams['content'])
         ? Utils::array_extract($gameParams, 'content')
-        : json_encode($gameParams);
+        : json_encode($gameParams);*/
+        
+        echo '<br>$gameAttributes<br>';
+        var_dump($gameAttributes);
     return $gameAttributes;
   }
 
   public function displayGame($id) {
     $gameAttributes = $this->getGame($id);
     $scripts = Game::MAIN_SCRIPTS;
-
-    $chosenGame = json_decode($gameAttributes['content'], 1)['chosen-game'];
+    echo '<br>attr<br>';
+    var_dump($gameAttributes);
+    echo '<br>Next<br>';
+    $content = json_decode($gameAttributes['content'], 1);
+    var_dump($content);
+    //$chosenGame = json_decode($gameAttributes['content'], 1)['chosen-game'];
+    $chosenGame = $content['chosen-game'];
     $gameScript = Game::GAME_SCRIPTS[$chosenGame];
 
     $scripts[] = $gameScript;
@@ -110,6 +126,8 @@ class GameController extends AbstractController {
     //var_dump($gameAttributes);
     $this->render('display-game', [
       'id' => $id,
+      'owner' => $gameAttributes['owner'],
+      'receiver' => $gameAttributes['receiver'],
       'scripts' => $scripts,
       'parameters' => $parameters,
       'userRights' => $gameAttributes['userRights']
@@ -229,7 +247,9 @@ class GameController extends AbstractController {
         } else {
           $gameManager->updateGame($id);
         }
-      } else {
+        $_SESSION['game']['id']['receiver'] = $receiver;
+      }
+      else {
         $this->flashMessage(
           'vous devez être le créateur du jeu pour le sauvegarder',
           'error'
@@ -247,4 +267,41 @@ class GameController extends AbstractController {
     }
     $this->render('game');
   }
+  public function sendInvitation(int $id) {
+    $gameAttributes = $this->getGame($id);
+    if ($gameAttributes['userRights'] === 'owner') {
+      echo 'owner: '.$gameAttributes['owner'].' receiver: '.$gameAttributes['receiver'];
+      if ($gameAttributes['receiver'] === $gameAttributes['owner']) {
+        $this->flashMessage('Vous n\'avez pas renseigné l\'addresse e-mail de la personne à qui est destiné le jeu', 'warning');
+        header('location: '.ROOT_URL.'/game/editGame/'.$id);
+      }
+      $userController = new UserController;
+      $user = $userController->findById($gameAttributes['receiver']);
+      $token = $user['token'];
+      $message = 'Bonjour!\n '.$_SESSION['user']['name'].' t\'invite à résoudre une énigme concoctée avec l\'aide du lutin facétieux. pour la découvrir, <a href="'.ROOT_URL.'/game/invitation/'.$receiver.'/'.$id.'/'.$token.'">clique ici</a> ou copie le lien suivant dans ton navigateur: '.ROOT_URL.'/game/invitation/'.$receiver.'/'.$id.'/'.$token;
+      AccountController::sendActivationLink($id, $token, $selectedUser['login'], PREFERED_SEND_METHOD);
+    }
+    else {
+      $this->flashMessage('vous n\'êtes pas identifié comme étant le créateur de ce jeu', 'error');
+      header('location: '.ROOT_URL.'/user/connect');
+      exit;
+    }
+  }
+  public function invitation($receiver, $gameId, $token) {
+    $gameManager = new GameManager;
+    $game = $gameManager->findById($gameId);
+    $userController = new UserController;
+    $user = $userController->findById($receiver);
+    if ($game && $game['receiver'] === $receiver && $user && $user['token'] === $token){
+      $userController->setUserSession($user);
+      header('location: '.ROOT_URL.'/game/displayGame/'.$gameId);
+    }
+    // A Détailler
+    else {
+      this->flashMessage('erreur', 'error');
+      header('location: '.ROOT_URL);
+      exit;
+    }
+  }
+  
 }

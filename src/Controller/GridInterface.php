@@ -1,6 +1,6 @@
 <?php
 namespace Workshop\Controller;
 
-interface FrameInterface {
+interface GridInterface {
   public function displayGrid();
 }

@@ -192,6 +192,6 @@ class UserController extends AbstractController {
   }
   public function successMessage(string $message) {
     $detail = User::MESSAGES[$message];
-    $this->render('user', ['message' => $detail]);
+    $this->render('user', ['message' => $detail, 'userForm' => 'connect']);
   }
 }

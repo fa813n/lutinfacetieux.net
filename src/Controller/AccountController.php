@@ -12,10 +12,12 @@ class AccountController {
     return $token;
   }
   
-  public static function sendActivationLink(int $userId, string $token, string $login, string $sendFunction = 'email'):void {
+  public static function sendActivationLink(int $userId, string $token, string $login, string $sendFunction = 'email', ?string $message = null):void {
     //$token = self::generateToken();
     $link = ROOT_URL."/account/activate/$userId/$token";
-    $message = "Pour acriver votre compte, cliquez sur <a href=\"$link\">le lien suivant.</a> Si lelien direct ne marche pas, copier-coller ceci dans la barre de recherche du navigateur : $link . À très bientôt!";
+    if (!$message) {
+      $message = "Pour acriver votre compte, cliquez sur <a href=\"$link\">le lien suivant.</a> Si lelien direct ne marche pas, copier-coller ceci dans la barre de recherche du navigateur : $link . À très bientôt!";
+    }
     self::$sendFunction($login, $message);
   }
   private static function email($login, $message) {
