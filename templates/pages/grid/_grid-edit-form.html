@@ -1,6 +1,6 @@
 <form
     method="post"
-    action="<?= ROOT_URL ?>/grid/displayGrid/<?= $id ?>"
+    action="<?= ROOT_URL ?>/grid/display/<?= $id ?>"
     id="grid-edit-form"
     class="grid-form"
 >
@@ -15,30 +15,30 @@
             <input type="radio" name="frame" value="set" id="set" />
             <label for="set">Une série de jeux indépendants</label>
             <section class="additional-parameters">
-                <label for="number-of-games">Nombre de jeux</label>
+                <label for="set-number-of-cells">Nombre de jeux</label>
                 <input
                     type="number"
                     min="1"
                     max="30"
-                    name="numberOfCells"
-                    value="<?= $numberOfGames ?? 4 ?>"
-                    id="number-of-games"
+                    name="set-number-of-cells"
+                    value="<?= $setNumberOfCells ?? 4 ?>"
+                    id="set-number-of-cells"
                 />
             </section>
         </div>
 
         <div class="grid-form_frame--board">
             <input type="radio" name="frame" value="board" id="board" />
-            <label for="board">Une suite de jeux</label>
+            <label for="board">Un plateau de jeux</label>
             <section class="additional-parameters">
-                <label for="number-of-cells">Nombre de jeux</label>
+                <label for="board-number-of-cells">Nombre de jeux</label>
                 <input
                     type="number"
                     min="1"
                     max="30"
-                    name="numberOfCells"
+                    name="board-number-of-cells"
                     value="<?= $numberOfCells ?? 4 ?>"
-                    id="number-of-cells"
+                    id="board-number-of-cells"
                 />
             </section>
         </div>
@@ -65,13 +65,13 @@
         </div>
     </fieldset>
 
-    <fieldset class="grid-form_name">
-        <label for="grid-name">Nom du jeu:</label>
+    <fieldset class="grid-form_title">
+        <label for="grid-title">Nom du jeu:</label>
         <input
             type="text"
-            name="gridName"
-            value="<?= $gridName ?? '' ?>"
-            id="grid-name"
+            name="title"
+            value="<?= $title ?? '' ?>"
+            id="title"
         />
     </fieldset>
 
@@ -86,6 +86,8 @@
     </fieldset>
     <!--<input type="hidden" name="grid" value="<?= $grid ?: 0 ?>" />-->
     <input type="hidden" name="id" value="<?= $id ?: 0 ?>" />
+    <input type="hidden" name="owner" value="<?= $owner ?>" />
+    <input type="hidden" name="receiver" value="<?= $receiver ?>" />
     <!--
     <button type="button" onclick="displayPreview()">Prévisualisation</button>
     -->

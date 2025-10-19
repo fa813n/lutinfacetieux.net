@@ -40,13 +40,15 @@ class GameController extends AbstractController {
 
     if ($id === 0) {
       $userRights = 'owner';
-    } else {
-      echo '<h2>bdd</h2>';
+    } 
+    else {
+      //echo '<h2>bdd</h2>';
       $gameManager = new GameManager();
       $gameParams = $gameManager->findById($id);
       if ($gameParams) {
         $userRights = $this->checkRights($gameParams);
-      } else {
+      } 
+      else {
         //throw new exception
         $this->flashMessage('jeu non trouvé', 'error');
         header('location: ' . ROOT_URL . '/game');
@@ -82,8 +84,8 @@ class GameController extends AbstractController {
      // echo '<br>$gameParams<br>';
       //var_dump($gameParams);
     }
-    echo '<br>$gameParams<br>';
-    var_dump($gameParams);
+    //echo '<br>$gameParams<br>';
+    //var_dump($gameParams);
     $gameAttributes['userRights'] = $userRights;
     $gameAttributes['id'] = (int) Utils::array_extract($gameParams, 'id');
     $gameAttributes['title'] = Utils::array_extract($gameParams, 'title');
@@ -112,11 +114,11 @@ class GameController extends AbstractController {
   public function displayGame($id) {
     $gameAttributes = $this->getGame($id);
     $scripts = Game::MAIN_SCRIPTS;
-    echo '<br>attr<br>';
-    var_dump($gameAttributes);
-    echo '<br>Next<br>';
+    //echo '<br>attr<br>';
+    //var_dump($gameAttributes);
+    //echo '<br>Next<br>';
     $content = json_decode($gameAttributes['content'], 1);
-    var_dump($content);
+    //var_dump($content);
     //$chosenGame = json_decode($gameAttributes['content'], 1)['chosen-game'];
     $chosenGame = $content['chosen-game'];
     $gameScript = Game::GAME_SCRIPTS[$chosenGame];

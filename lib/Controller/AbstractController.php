@@ -77,7 +77,7 @@ abstract class AbstractController {
       }
     }
   }
-  
+  /*
   public function checkRights(array $properties):string {
     $userId = $_SESSION['user']['id'] ?? 0;
     $status = '';
@@ -94,7 +94,7 @@ abstract class AbstractController {
     }
     return $status;
   }
-  
+  */
   public function flashMessage(string $message, string $type = 'info'){
     $_SESSION['flashMessage'] = ['message' => $message, 'type' => $type];
   }
